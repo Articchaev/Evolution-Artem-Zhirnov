@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class hand : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class hand : MonoBehaviour
     [SerializeField]
     float arcHeight;
     List<Card> cards = new List<Card>();
+    [SerializeField]
+    Button TurnButton;
     private void LayoutInstant()
     {
         int n = cards.Count;
