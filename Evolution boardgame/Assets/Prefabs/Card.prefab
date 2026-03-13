@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 4346910688027345492}
   - component: {fileID: 8857378598870586741}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Backside
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1344,7 +1344,7 @@ MonoBehaviour:
   imagecard: {fileID: 1120805940244484125}
   imagedopcard: {fileID: 6982601660181377382}
   SortingGroup: {fileID: 8927750266061538330}
-  backside: {fileID: 0}
+  backside: {fileID: 8857378598870586741}
 --- !u!210 &8927750266061538330
 SortingGroup:
   m_ObjectHideFlags: 0

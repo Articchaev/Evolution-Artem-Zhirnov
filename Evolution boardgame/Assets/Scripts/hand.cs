@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +19,8 @@ public class hand : MonoBehaviour
     List<Card> cards = new List<Card>();
     [SerializeField]
     Button TurnButton;
+    [SerializeField]
+    deck Cardsdeck;
     private void LayoutInstant()
     {
         int n = cards.Count;
@@ -35,18 +40,38 @@ public class hand : MonoBehaviour
             cards[i].SortingGroup.sortingOrder = n - i;
         }
     }
+    public void ChooseCard(Card card)
+    {
+        for (int i = 0; i < cards.Count; i++) 
+        {
+            if (cards[i] != card)
+            {
+                cards[i].deactivatecard();
+            }
+        }
+    }
+    public void AddCard()
+    {
+        cards.Add(Instantiate(cardprefab, gameObject.transform));
+        cards.Last().onCardClick += ChooseCard;
+        TurnButton.onClick.AddListener(cards.Last().Turn);
+        LayoutInstant();
+        Cardsdeck.givecard();
+    }
     void Start()
     {
         for (int i = 0; i < 6; i++)
         {
             cards.Add(Instantiate(cardprefab, gameObject.transform));
-
+            cards.Last().onCardClick += ChooseCard;
+            TurnButton.onClick.AddListener(cards.Last().Turn);
+            Cardsdeck.givecard();
         }
         LayoutInstant();
     }
     // Update is called once per frame
     void Update()
     {
-        LayoutInstant();
+
     }
 }

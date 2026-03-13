@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -33,42 +34,64 @@ public class Card : MonoBehaviour
     public SortingGroup SortingGroup;
     [SerializeField]
     SpriteRenderer backside;
+    public event Action<Card> onCardClick;
     Vector3 Scale0;
     Vector3 Scale2;
     bool ischosen;
+    int layer;
+    int cardstage = 1;
     // Start is called before the first frame update
     public void Turn()
     {
-        if (backside.gameObject.activeSelf)
+        if (cardstage == 1)
         {
-            backside.gameObject.SetActive(false);
+            transform.Rotate(0, 0, 180);
+            cardstage = 2;
+        }
+        else if (cardstage == 2) 
+        {
+            transform.Rotate(0, 0, 180);
+            backside.gameObject.SetActive(true);
+            cardstage = 3;
         }
         else
         {
-            backside.gameObject.SetActive(true);
+            cardstage = 1;
+            backside.gameObject.SetActive(false);
         }
+    }
+    public void activatecard()
+    {
+        onCardClick.Invoke(this);
+        layer = SortingGroup.sortingOrder;
+        StartCoroutine(ChangeScale(Scale2, 0.5f));
+        ischosen = true;
+        SortingGroup.sortingOrder = 10000;
+    }
+    public void deactivatecard()
+    {
+        StartCoroutine(ChangeScale(Scale0, 0.5f));
+        ischosen = false;
+        SortingGroup.sortingOrder = layer;
     }
     private void OnMouseDown()
     {
         if (!ischosen)
         {
-            StartCoroutine(ChangeScale(Scale2, 0.5f));
-            ischosen = true;
+            activatecard();
         }
         else
         {
-            StartCoroutine(ChangeScale(Scale0, 0.5f));
-            ischosen= false;
+            deactivatecard();
         }
     }
-    private IEnumerator ChangeScale(Vector3 scale2, float timex)
+    public IEnumerator ChangeScale(Vector3 scale2, float timex)
     {
         Vector3 scale = gameObject.transform.localScale;
         if (scale != scale2)
         {
             Vector3 pos = gameObject.transform.localPosition;
             float time = 0;
-            SortingGroup.sortingOrder = 10000;
             while (time < timex)
             {
                 gameObject.transform.localScale = Vector3.Lerp(scale, scale2, time / timex);
@@ -77,6 +100,10 @@ public class Card : MonoBehaviour
                 yield return null;
             }
         }
+    }
+    private void OnDestroy()
+    {
+        onCardClick = null;
     }
     void Start()
     {
