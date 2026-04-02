@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class hand : MonoBehaviour
 {
@@ -16,12 +17,16 @@ public class hand : MonoBehaviour
     float cardSpacing;
     [SerializeField]
     float arcHeight;
-    List<Card> cards = new List<Card>();
+    public List<Card> cards = new List<Card>();
     [SerializeField]
     Button TurnButton;
     [SerializeField]
     deck Cardsdeck;
-    private void LayoutInstant()
+    [SerializeField]
+    GameStateContext contexth;
+    
+    public Card curentcard => cards.FirstOrDefault(c => c.active == true);
+    public void LayoutInstant()
     {
         int n = cards.Count;
         if (n == 0) return;
@@ -37,7 +42,7 @@ public class hand : MonoBehaviour
             cards[i].transform.localPosition = targetPos;
             cards[i].transform.localRotation = Quaternion.Euler(0, 0, targetRot);
             cards[i].transform.SetSiblingIndex(i); // порядок отрисовки
-            cards[i].SortingGroup.sortingOrder = n - i;
+            cards[i].SortingGroup.sortingOrder = n*10 - i;
         }
     }
     public void ChooseCard(Card card)
@@ -46,14 +51,20 @@ public class hand : MonoBehaviour
         {
             if (cards[i] != card)
             {
+                cards[i].layer = cards[i].SortingGroup.sortingOrder;
                 cards[i].deactivatecard();
             }
         }
     }
     public void AddCard()
     {
+        if (Cardsdeck.currentcards <= 0)
+        {
+            return;
+        }
         cards.Add(Instantiate(cardprefab, gameObject.transform));
         cards.Last().onCardClick += ChooseCard;
+        cards.Last().context = contexth;
         TurnButton.onClick.AddListener(cards.Last().Turn);
         LayoutInstant();
         Cardsdeck.givecard();
@@ -64,6 +75,7 @@ public class hand : MonoBehaviour
         {
             cards.Add(Instantiate(cardprefab, gameObject.transform));
             cards.Last().onCardClick += ChooseCard;
+            cards.Last().context = contexth;
             TurnButton.onClick.AddListener(cards.Last().Turn);
             Cardsdeck.givecard();
         }

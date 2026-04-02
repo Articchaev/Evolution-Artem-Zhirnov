@@ -10,6 +10,7 @@ public class Card : MonoBehaviour
 {
     [SerializeField]
     TMP_Text cardname;
+    public GameStateContext context;
     [SerializeField]
     TMP_Text cardnamerus;
     [SerializeField]
@@ -33,16 +34,24 @@ public class Card : MonoBehaviour
     [SerializeField]
     public SortingGroup SortingGroup;
     [SerializeField]
-    SpriteRenderer backside;
+    public SpriteRenderer backside;
     public event Action<Card> onCardClick;
     Vector3 Scale0;
     Vector3 Scale2;
     bool ischosen;
-    int layer;
-    int cardstage = 1;
+    [SerializeField]
+    public int layer;
+    public int activatenumber = -1;
+    public int cardstage = 1;
+    public bool active;
+    public bool Ontable = false;
     // Start is called before the first frame update
     public void Turn()
     {
+        if (context.nowstate is not EvolutionStage)
+        {
+            return;
+        }
         if (cardstage == 1)
         {
             transform.Rotate(0, 0, 180);
@@ -55,24 +64,35 @@ public class Card : MonoBehaviour
             cardstage = 3;
         }
         else
-        {
+        { 
             cardstage = 1;
             backside.gameObject.SetActive(false);
         }
     }
     public void activatecard()
     {
-        onCardClick.Invoke(this);
+        if (Ontable)
+        {
+            return;
+        }
+        onCardClick?.Invoke(this);
         layer = SortingGroup.sortingOrder;
         StartCoroutine(ChangeScale(Scale2, 0.5f));
         ischosen = true;
         SortingGroup.sortingOrder = 10000;
+        active = true;
     }
     public void deactivatecard()
     {
+        if (Ontable)
+        {
+            return;
+        }
         StartCoroutine(ChangeScale(Scale0, 0.5f));
         ischosen = false;
         SortingGroup.sortingOrder = layer;
+        active = false;
+        
     }
     private void OnMouseDown()
     {
@@ -101,9 +121,13 @@ public class Card : MonoBehaviour
             }
         }
     }
-    private void OnDestroy()
+    public void clearSubs()
     {
         onCardClick = null;
+    }
+    private void OnDestroy()
+    {
+        clearSubs();
     }
     void Start()
     {

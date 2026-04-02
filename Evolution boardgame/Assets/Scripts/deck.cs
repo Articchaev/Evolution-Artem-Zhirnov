@@ -9,7 +9,7 @@ public class deck : MonoBehaviour
     List<Card> CardsDeck;
     [SerializeField]
     private int maxCards;
-    int currentcards;
+    public int currentcards;
     // Start is called before the first frame update
     public void deckstage(int n)
     {

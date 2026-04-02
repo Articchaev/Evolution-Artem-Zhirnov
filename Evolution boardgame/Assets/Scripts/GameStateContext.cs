@@ -9,9 +9,8 @@ public class GameStateContext : MonoBehaviour
     Button NextStageButton;
     [SerializeField]
     EvolutionStage evolutionStage;
-    IGameState nowstate;
-    // Start is called before the first frame update
-    void ChangeState()
+    public IGameState nowstate;
+    public void ChangeState()
     {
         nowstate.ChangeState();
     }

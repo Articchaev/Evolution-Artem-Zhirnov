@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class EvolutionStage : MonoBehaviour, IGameState
 {
@@ -24,6 +25,7 @@ public class EvolutionStage : MonoBehaviour, IGameState
         Debug.Log("Перешел в фазу определения кормовой базы");
         imageevolution.sprite = evolutioninactive;
         imagefood.sprite = foodactive;
+        gameStateContext.ChangeState();
     }
      
     // Start is called before the first frame update

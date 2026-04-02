@@ -17,13 +17,33 @@ public class DeathStage : MonoBehaviour, IGameState
     Sprite evolutionactive;
     [SerializeField]
     Sprite deathinactive;
+    [SerializeField]
+    hand Cardhand;
+    [SerializeField]
+    TableBox YourTable;
     public void ChangeState()
     {
+        if (YourTable.Creatures.Count == 0)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                Cardhand.AddCard();
+            }
+        }
+        else
+        {
+            for (int i = 0; i < YourTable.Creatures.Count + 1; i++) 
+            {
+                Cardhand.AddCard();
+            }
+        }
+        
         gameStateContext.SetStage(evolutionStage);
         Debug.Log("Перешел в фазу развития");
         imageevolution.sprite = evolutionactive;
         imagedeath.sprite = deathinactive;
     }
+   
 
     // Start is called before the first frame update
     void Start()
