@@ -6,7 +6,7 @@ using UnityEngine;
 public class deck : MonoBehaviour
 {
     [SerializeField]
-    List<Card> CardsDeck;
+    List<GameObject> CardsDeck;
     [SerializeField]
     private int maxCards;
     public int currentcards;

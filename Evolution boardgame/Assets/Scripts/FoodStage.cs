@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
 using static UnityEditor.PlayerSettings;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class FoodStage : MonoBehaviour, IGameState
 {
@@ -20,17 +23,28 @@ public class FoodStage : MonoBehaviour, IGameState
     [SerializeField]
     Sprite foodinactive;
     public int a;
-    public List<GameObject> Food;
+    public List<RedFood> Food;
     [SerializeField]
     hand Hand;
     [SerializeField]
-    GameObject RedFood;
+    RedFood RedFoodprefab;
     [SerializeField]
     GameObject Root;
     Vector3 pos;
+    public RedFood currentfood => Food.FirstOrDefault(c => c.active == true);
+    public void ChooseFood(RedFood card)
+    {
+        for (int i = 0; i < Food.Count; i++)
+        {
+            if (Food[i] != card)
+            {
+                Food[i].deactivatefood();
+            }
+        }
+    }
     public void ChangeState()
     {
-        List<Vector3> vector3s = new List<Vector3>() { new Vector3(-0.25f, -0.25f, 0), new Vector3(-0.25f, 0.25f, 0), new Vector3(0.25f, 0.25f, 0), new Vector3(0.25f, -0.25f, 0), new Vector3(-0.5f, -0.25f, 0), new Vector3(-0.5f, 0.25f, 0), new Vector3(0.5f, -0.25f, 0), new Vector3(0.5f, 0.25f, 0) };
+        List<Vector3> vector3s = new List<Vector3>() { new Vector3(-0.5f, -0.25f, 0), new Vector3(-0.5f, 0.25f, 0), new Vector3(0.5f, 0.25f, 0), new Vector3(0.5f, -0.25f, 0), new Vector3(-1, -0.25f, 0), new Vector3(-1, 0.25f, 0), new Vector3(1, -0.25f, 0), new Vector3(1, 0.25f, 0) };
         a = Random.Range(3, 8);
         foreach (Card card in Hand.cards)
         {
@@ -48,7 +62,8 @@ public class FoodStage : MonoBehaviour, IGameState
         }
         for (int i = 0; i < a; i++)
         {
-            Food.Add(Instantiate(RedFood, Root.transform));
+            Food.Add(Instantiate(RedFoodprefab, Root.transform));
+            Food.Last().onFoodClick += ChooseFood;
             pos = vector3s[Random.Range(0, 7 - i)];
             vector3s.Remove(pos);
             Food[i].transform.localPosition = pos;

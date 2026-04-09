@@ -19,6 +19,8 @@ public class EvolutionStage : MonoBehaviour, IGameState
     Sprite foodactive;
     [SerializeField]
     Sprite evolutioninactive;
+    [SerializeField]
+    Table table;
     public void ChangeState()
     {
         gameStateContext.SetStage(foodStage);
@@ -26,6 +28,7 @@ public class EvolutionStage : MonoBehaviour, IGameState
         imageevolution.sprite = evolutioninactive;
         imagefood.sprite = foodactive;
         gameStateContext.ChangeState();
+        table.colider.enabled = false;
     }
      
     // Start is called before the first frame update

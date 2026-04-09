@@ -21,8 +21,24 @@ public class DeathStage : MonoBehaviour, IGameState
     hand Cardhand;
     [SerializeField]
     TableBox YourTable;
+    [SerializeField]
+    Table table;
     public void ChangeState()
     {
+        List<Card> CardDel = new List<Card>();
+        foreach (Card i in YourTable.Creatures)
+        {
+            if (i.HaveFood < i.Needfood)
+            {
+                CardDel.Add(i);
+            }
+        }
+        foreach (Card i in CardDel)
+        {
+            GameObject.Destroy(i.gameObject);
+            YourTable.Creatures.Remove(i);
+        }
+        CardDel.Clear();
         if (YourTable.Creatures.Count == 0)
         {
             for (int i = 0; i < 6; i++)
@@ -32,16 +48,16 @@ public class DeathStage : MonoBehaviour, IGameState
         }
         else
         {
-            for (int i = 0; i < YourTable.Creatures.Count + 1; i++) 
+            for (int i = 0; i < YourTable.Creatures.Count + 1; i++)
             {
                 Cardhand.AddCard();
             }
         }
-        
         gameStateContext.SetStage(evolutionStage);
         Debug.Log("Перешел в фазу развития");
         imageevolution.sprite = evolutionactive;
         imagedeath.sprite = deathinactive;
+        table.colider.enabled = true;
     }
    
 

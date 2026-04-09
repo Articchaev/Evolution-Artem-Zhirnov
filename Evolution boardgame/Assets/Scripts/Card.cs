@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Video;
+using UnityEngine.XR;
 
 public class Card : MonoBehaviour
 {
@@ -45,6 +46,11 @@ public class Card : MonoBehaviour
     public int cardstage = 1;
     public bool active;
     public bool Ontable = false;
+    public int Needfood = 0;
+    public int HaveFood = 0;
+    List<FoodBlock> foodBlocks = new List<FoodBlock>();
+    FoodStage foodStage;
+
     // Start is called before the first frame update
     public void Turn()
     {
@@ -71,10 +77,6 @@ public class Card : MonoBehaviour
     }
     public void activatecard()
     {
-        if (Ontable)
-        {
-            return;
-        }
         onCardClick?.Invoke(this);
         layer = SortingGroup.sortingOrder;
         StartCoroutine(ChangeScale(Scale2, 0.5f));
@@ -84,10 +86,6 @@ public class Card : MonoBehaviour
     }
     public void deactivatecard()
     {
-        if (Ontable)
-        {
-            return;
-        }
         StartCoroutine(ChangeScale(Scale0, 0.5f));
         ischosen = false;
         SortingGroup.sortingOrder = layer;
@@ -96,14 +94,30 @@ public class Card : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        if (!ischosen)
-        {
-            activatecard();
+        if (Ontable) 
+        { 
+            if (foodStage.currentfood == null || context.nowstate is not FightingStage || cardstage != 3 || HaveFood >= Needfood)
+            {
+                return;
+            }
+            foodStage.currentfood.clearSubs();
+            HaveFood += 1;
+            foodStage.currentfood.transform.SetParent(gameObject.transform);
+            foodBlocks.Add(foodStage.currentfood);
+            foodStage.Food.Remove(foodStage.currentfood);
         }
         else
         {
-            deactivatecard();
+            if (!ischosen)
+            {
+                activatecard();
+            }
+            else
+            {
+                deactivatecard();
+            }
         }
+        
     }
     public IEnumerator ChangeScale(Vector3 scale2, float timex)
     {

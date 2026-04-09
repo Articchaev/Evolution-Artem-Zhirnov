@@ -11,6 +11,8 @@ public class Table : MonoBehaviour
     Button TurnButton;
     [SerializeField]
     GameStateContext context;
+    [SerializeField]
+    public  BoxCollider2D colider;
     private void OnMouseDown()
     {
         PlayCard();
@@ -22,6 +24,7 @@ public class Table : MonoBehaviour
             return;
         }
         Hand.curentcard.clearSubs();
+        Hand.curentcard.Needfood = 1;
         TurnButton.onClick.RemoveListener(Hand.curentcard.Turn);
         Hand.curentcard.Ontable = true;
         Hand.curentcard.transform.SetParent(YourTable.transform);

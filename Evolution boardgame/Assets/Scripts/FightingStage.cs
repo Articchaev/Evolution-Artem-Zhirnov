@@ -22,7 +22,7 @@ public class FightingStage : MonoBehaviour, IGameState
     FoodStage foodStage;
     public void ChangeState()
     {
-        foreach(GameObject Redfood in foodStage.Food)
+        foreach(RedFood Redfood in foodStage.Food)
         {
             GameObject.Destroy(Redfood.gameObject);
         }
