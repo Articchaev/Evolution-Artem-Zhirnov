@@ -14,8 +14,13 @@ public class RedFood : FoodBlock
     Vector3 Scale2;
     bool ischosen;
     public bool active;
+    public bool onCard;
     public void activatefood()
     {
+        if (onCard)
+        {
+            return;
+        }
         onFoodClick?.Invoke(this);
         StartCoroutine(ChangeScale(Scale2, 0.5f));
         ischosen = true;

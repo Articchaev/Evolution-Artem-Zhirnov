@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,10 @@ public class Table : MonoBehaviour
     GameStateContext context;
     [SerializeField]
     public  BoxCollider2D colider;
+    [SerializeField]
+    Botikhand botikhand;
+    [SerializeField]
+    TableBox botiktable;
     private void OnMouseDown()
     {
         PlayCard();
@@ -31,7 +36,22 @@ public class Table : MonoBehaviour
         YourTable.Creatures.Add(Hand.curentcard);
         Hand.cards.Remove(Hand.curentcard);
         Hand.LayoutInstant();
+        PlayBotikCard();
 
+    }
+    public void PlayBotikCard()
+    {
+        if (botikhand.cards.Count <= 0)
+        {
+            return;
+        }
+        Card card = botikhand.cards[Random.Range(0, botikhand.cards.Count - 1)];
+        card.Needfood = 1;
+        card.Ontable = true;
+        card.transform.SetParent(botiktable.transform);
+        botiktable.Creatures.Add(card);
+        botikhand.cards.Remove(card);
+        botikhand.LayoutInstant();
     }
     // Start is called before the first frame update
     void Start()

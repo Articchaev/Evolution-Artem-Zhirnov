@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class DeathStage : MonoBehaviour, IGameState
@@ -23,8 +24,18 @@ public class DeathStage : MonoBehaviour, IGameState
     TableBox YourTable;
     [SerializeField]
     Table table;
+    [SerializeField]
+    deck TableDeck;
+    [SerializeField]
+    TableBox BotikTable;
+    [SerializeField]
+    Botikhand Cardbotikhand;
     public void ChangeState()
     {
+        if (TableDeck.currentcards == 0)
+        {
+            SceneManager.LoadScene(2);
+        }
         List<Card> CardDel = new List<Card>();
         foreach (Card i in YourTable.Creatures)
         {
@@ -32,6 +43,15 @@ public class DeathStage : MonoBehaviour, IGameState
             {
                 CardDel.Add(i);
             }
+            i.HaveFood = 0;
+        }
+        foreach (Card i in BotikTable.Creatures)
+        {
+            if (i.HaveFood < i.Needfood)
+            {
+                CardDel.Add(i);
+            }
+            i.HaveFood = 0;
         }
         foreach (Card i in CardDel)
         {
@@ -50,7 +70,21 @@ public class DeathStage : MonoBehaviour, IGameState
         {
             for (int i = 0; i < YourTable.Creatures.Count + 1; i++)
             {
-                Cardhand.AddCard();
+                Cardbotikhand.AddCard();
+            }
+        }
+        if (BotikTable.Creatures.Count == 0)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                Cardbotikhand.AddCard();
+            }
+        }
+        else
+        {
+            for (int i = 0; i < BotikTable.Creatures.Count + 1; i++)
+            {
+                Cardbotikhand.AddCard();
             }
         }
         gameStateContext.SetStage(evolutionStage);

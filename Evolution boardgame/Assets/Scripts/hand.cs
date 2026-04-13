@@ -24,6 +24,8 @@ public class hand : MonoBehaviour
     deck Cardsdeck;
     [SerializeField]
     GameStateContext contexth;
+    [SerializeField]
+    FoodStage foodstageh;
     
     public Card curentcard => cards.FirstOrDefault(c => c.active == true);
     public void LayoutInstant()
@@ -65,6 +67,7 @@ public class hand : MonoBehaviour
         cards.Add(Instantiate(cardprefab, gameObject.transform));
         cards.Last().onCardClick += ChooseCard;
         cards.Last().context = contexth;
+        cards.Last().foodStage = foodstageh;
         TurnButton.onClick.AddListener(cards.Last().Turn);
         LayoutInstant();
         Cardsdeck.givecard();
@@ -76,6 +79,7 @@ public class hand : MonoBehaviour
             cards.Add(Instantiate(cardprefab, gameObject.transform));
             cards.Last().onCardClick += ChooseCard;
             cards.Last().context = contexth;
+            cards.Last().foodStage = foodstageh;
             TurnButton.onClick.AddListener(cards.Last().Turn);
             Cardsdeck.givecard();
         }

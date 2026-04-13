@@ -33,7 +33,7 @@ public class deck : MonoBehaviour
     }
     void Start()
     {
-        deckstage(56);
+        deckstage(84);
         currentcards = maxCards;
     }
 

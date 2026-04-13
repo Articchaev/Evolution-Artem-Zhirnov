@@ -48,8 +48,9 @@ public class Card : MonoBehaviour
     public bool Ontable = false;
     public int Needfood = 0;
     public int HaveFood = 0;
-    List<FoodBlock> foodBlocks = new List<FoodBlock>();
-    FoodStage foodStage;
+    public List<FoodBlock> foodBlocks = new List<FoodBlock>();
+    public FoodStage foodStage;
+    public bool Botikcard = false;
 
     // Start is called before the first frame update
     public void Turn()
@@ -75,6 +76,26 @@ public class Card : MonoBehaviour
             backside.gameObject.SetActive(false);
         }
     }
+    public void BotikTurn(int x)
+    {
+        if (x == 2)
+        {
+            transform.localEulerAngles = new Vector3(0, 0, 180);
+            cardstage = 2;
+        }
+        else if (x == 3)
+        {
+            transform.localEulerAngles = new Vector3(0, 0, 0);
+            backside.gameObject.SetActive(true);
+            cardstage = 3;
+        }
+        else
+        {
+            cardstage = 1;
+            transform.localEulerAngles = new Vector3(0, 0, 0);
+            backside.gameObject.SetActive(false);
+        }
+    }
     public void activatecard()
     {
         onCardClick?.Invoke(this);
@@ -94,6 +115,10 @@ public class Card : MonoBehaviour
     }
     private void OnMouseDown()
     {
+        if (Botikcard)
+        {
+            return;
+        }
         if (Ontable) 
         { 
             if (foodStage.currentfood == null || context.nowstate is not FightingStage || cardstage != 3 || HaveFood >= Needfood)
@@ -101,10 +126,13 @@ public class Card : MonoBehaviour
                 return;
             }
             foodStage.currentfood.clearSubs();
+            foodStage.currentfood.onCard = true;
             HaveFood += 1;
             foodStage.currentfood.transform.SetParent(gameObject.transform);
             foodBlocks.Add(foodStage.currentfood);
+            RedFood a = foodStage.currentfood;
             foodStage.Food.Remove(foodStage.currentfood);
+            a.deactivatefood();
         }
         else
         {

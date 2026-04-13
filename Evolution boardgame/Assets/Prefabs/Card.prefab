@@ -1295,6 +1295,7 @@ GameObject:
   - component: {fileID: 5456465175926289567}
   - component: {fileID: 8927750266061538330}
   - component: {fileID: 6362162942068211328}
+  - component: {fileID: 7675994716744656008}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -1333,6 +1334,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardname: {fileID: 3008834409740314268}
+  context: {fileID: 0}
   cardnamerus: {fileID: 8592304126533716321}
   carddescription: {fileID: 5565642677189190435}
   dopcard: {fileID: 8674346130371230120}
@@ -1345,6 +1347,14 @@ MonoBehaviour:
   imagedopcard: {fileID: 6982601660181377382}
   SortingGroup: {fileID: 8927750266061538330}
   backside: {fileID: 8857378598870586741}
+  layer: 0
+  activatenumber: -1
+  cardstage: 1
+  active: 0
+  Ontable: 0
+  Needfood: 0
+  HaveFood: 0
+  foodBlocks: []
 --- !u!210 &8927750266061538330
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -1402,6 +1412,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.5, y: 3.5}
   m_EdgeRadius: 0
+--- !u!114 &7675994716744656008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6687115162026055397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ef0ab183be27c0499434b521bd67b1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  card: {fileID: 5456465175926289567}
+  ofseth: -1
+  ofsetv: 1
+  otstyp: 0.25
 --- !u!1 &7299715212112755232
 GameObject:
   m_ObjectHideFlags: 0
