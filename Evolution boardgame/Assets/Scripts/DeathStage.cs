@@ -34,7 +34,15 @@ public class DeathStage : MonoBehaviour, IGameState
     {
         if (TableDeck.currentcards == 0)
         {
-            SceneManager.LoadScene(2);
+            if (YourTable.Creatures.Count >= BotikTable.Creatures.Count)
+            {
+
+                SceneManager.LoadScene(2);
+            }
+            else
+            {
+                SceneManager.LoadScene(3);
+            }
         }
         List<Card> CardDel = new List<Card>();
         foreach (Card i in YourTable.Creatures)
@@ -44,6 +52,11 @@ public class DeathStage : MonoBehaviour, IGameState
                 CardDel.Add(i);
             }
             i.HaveFood = 0;
+            foreach (FoodBlock j in i.foodBlocks)
+            {
+                GameObject.Destroy(j.gameObject);
+            }
+            i.foodBlocks.Clear();
         }
         foreach (Card i in BotikTable.Creatures)
         {
@@ -52,11 +65,17 @@ public class DeathStage : MonoBehaviour, IGameState
                 CardDel.Add(i);
             }
             i.HaveFood = 0;
+            foreach (FoodBlock j in i.foodBlocks)
+            {
+                GameObject.Destroy(j.gameObject);
+            }
+            i.foodBlocks.Clear();
         }
         foreach (Card i in CardDel)
         {
             GameObject.Destroy(i.gameObject);
             YourTable.Creatures.Remove(i);
+            BotikTable.Creatures.Remove(i);
         }
         CardDel.Clear();
         if (YourTable.Creatures.Count == 0)
@@ -70,7 +89,7 @@ public class DeathStage : MonoBehaviour, IGameState
         {
             for (int i = 0; i < YourTable.Creatures.Count + 1; i++)
             {
-                Cardbotikhand.AddCard();
+                Cardhand.AddCard();
             }
         }
         if (BotikTable.Creatures.Count == 0)
@@ -87,13 +106,14 @@ public class DeathStage : MonoBehaviour, IGameState
                 Cardbotikhand.AddCard();
             }
         }
+        
         gameStateContext.SetStage(evolutionStage);
         Debug.Log("Перешел в фазу развития");
         imageevolution.sprite = evolutionactive;
         imagedeath.sprite = deathinactive;
         table.colider.enabled = true;
     }
-   
+    
 
     // Start is called before the first frame update
     void Start()

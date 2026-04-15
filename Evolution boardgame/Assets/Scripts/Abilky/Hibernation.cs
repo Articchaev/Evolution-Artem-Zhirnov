@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Botik : MonoBehaviour
+[CreateAssetMenu(fileName = "Hibernation", menuName = "configs")]
+public class Hibernation : Mainabilityconfig
 {
     // Start is called before the first frame update
     void Start()

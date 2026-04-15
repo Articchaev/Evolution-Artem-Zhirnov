@@ -51,6 +51,7 @@ public class Card : MonoBehaviour
     public List<FoodBlock> foodBlocks = new List<FoodBlock>();
     public FoodStage foodStage;
     public bool Botikcard = false;
+    public Botik botikh;
 
     // Start is called before the first frame update
     public void Turn()
@@ -133,6 +134,7 @@ public class Card : MonoBehaviour
             RedFood a = foodStage.currentfood;
             foodStage.Food.Remove(foodStage.currentfood);
             a.deactivatefood();
+            botikh.PlayBotikFood();
         }
         else
         {
