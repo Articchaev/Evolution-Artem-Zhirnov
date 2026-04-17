@@ -191,6 +191,14 @@ public class Card : MonoBehaviour
                     {
                         return;
                     }
+                    Hand.curentcard.clearSubs();
+                    Hand.curentcard.Needfood = 0;
+                    Hand.TurnButton.onClick.RemoveListener(Hand.curentcard.Turn);
+                    Hand.curentcard.OnCard = true;
+                    Hand.curentcard.transform.SetParent(transform);
+                    abilky.Add(Hand.curentcard);
+                    Hand.cards.Remove(Hand.curentcard);
+                    Hand.LayoutInstant();
                 }
                 else
                 {
