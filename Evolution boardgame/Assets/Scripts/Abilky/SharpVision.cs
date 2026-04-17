@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "SharpVision", menuName = "configs")]
+[CreateAssetMenu(fileName = "SharpVision", menuName = "configs/SharpVision")]
 public class SharpVision : Mainabilityconfig
 {
     // Start is called before the first frame update

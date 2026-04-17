@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "Grazing", menuName = "configs")]
+[CreateAssetMenu(fileName = "Grazing", menuName = "configs/Grazing")]
 public class Grazing : Mainabilityconfig
 {
     // Start is called before the first frame update

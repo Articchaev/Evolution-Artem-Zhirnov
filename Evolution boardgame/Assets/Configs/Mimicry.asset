@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78e2686baf5576644ac4c548a5ca3724, type: 3}
   m_Name: Mimicry
   m_EditorClassIdentifier: 
+  dopability: {fileID: 0}
+  mainability: {fileID: 11400000, guid: 7a1f327bf98668a439601d8b645bbc0d, type: 2}

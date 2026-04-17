@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e7ccaad491690e468f1d429fce4fb9e, type: 3}
+  m_Name: SharpVision
+  m_EditorClassIdentifier: 
+  ImageCard: {fileID: 21300000, guid: 16adacd9f4e215240a36ad4721416314, type: 3}
+  LeftDirection: {fileID: 0}
+  RightDirection: {fileID: 0}
+  EnglishName: SHARP VISION
+  RussianName: "\u041E\u0421\u0422\u0420\u041E\u0415 \u0417\u0420\u0415\u041D\u0418\u0415"
+  Description: "\u0425\u0438\u0449\u043D\u0438\u043A \u0441 \u044D\u0442\u0438\u043C
+    \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u043E\u043C \u043C\u043E\u0436\u0435\u0442
+    \u0430\u0442\u0430\u043A\u043E\u0432\u0430\u0442\u044C \u0436\u0438\u0432\u043E\u0442\u043D\u043E\u0435
+    \u0441\u043E \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u043E\u043C \u043A\u0430\u043C\u0443\u0444\u043B\u044F\u0436."
+  BackgroundColor: {r: 0.9568628, g: 0.98823535, b: 0.93725497, a: 1}

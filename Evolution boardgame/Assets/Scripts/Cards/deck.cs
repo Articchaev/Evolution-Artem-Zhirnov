@@ -9,6 +9,9 @@ public class deck : MonoBehaviour
     List<GameObject> CardsDeck;
     [SerializeField]
     private int maxCards;
+    [SerializeField]
+    Deckconfig deckconfig;
+    List<Cardconfig> cardsindeck;
     public int currentcards;
     // Start is called before the first frame update
     public void deckstage(int n)
@@ -26,15 +29,20 @@ public class deck : MonoBehaviour
             }
         }
     }
-    public void givecard()
+    public Cardconfig givecard()
     {
+
         currentcards--;
         deckstage(currentcards);
+        Cardconfig c = cardsindeck[Random.Range(0, cardsindeck.Count)];
+        cardsindeck.Remove(c);
+        return c;
     }
     void Start()
     {
         deckstage(84);
         currentcards = maxCards;
+        cardsindeck = new List<Cardconfig>(deckconfig.cardconfigs);
     }
 
     // Update is called once per frame

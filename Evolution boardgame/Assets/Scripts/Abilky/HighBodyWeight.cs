@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "HighBodyWeight", menuName = "configs")]
+[CreateAssetMenu(fileName = "HighBodyWeight", menuName = "configs/HighBodyWeight")]
 public class HighBodyWeight : Mainabilityconfig
 {
     // Start is called before the first frame update

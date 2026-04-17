@@ -5,7 +5,20 @@ using UnityEngine;
 
 public class Mainabilityconfig : ScriptableObject
 {
-    // Start is called before the first frame update
+    [SerializeField]
+    public Sprite ImageCard;
+    [SerializeField]
+    public Sprite LeftDirection;
+    [SerializeField]
+    public Sprite RightDirection;
+    [SerializeField]
+    public string EnglishName;
+    [SerializeField]
+    public string RussianName;
+    [SerializeField]
+    public string Description;
+    [SerializeField]
+    public Color BackgroundColor;
     void Start()
     {
         

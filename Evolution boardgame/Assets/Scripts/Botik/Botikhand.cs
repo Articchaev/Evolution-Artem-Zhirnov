@@ -31,7 +31,8 @@ public class Botikhand : MonoBehaviour
         cards.Last().context = contexth;
         cards.Last().foodStage = foodstageh;
         LayoutInstant();
-        Cardsdeck.givecard();
+        Cardconfig config = Cardsdeck.givecard();
+        cards.Last().SetUpView(config);
         cards.Last().BotikTurn(3);
         cards.Last().Botikcard = true;
     }
@@ -61,7 +62,8 @@ public class Botikhand : MonoBehaviour
             cards.Add(Instantiate(cardprefab, gameObject.transform));
             cards.Last().context = contexth;
             cards.Last().foodStage = foodstageh;
-            Cardsdeck.givecard();
+            Cardconfig config = Cardsdeck.givecard();
+            cards.Last().SetUpView(config);
             cards.Last().BotikTurn(3);
             cards.Last().Botikcard = true;
         }

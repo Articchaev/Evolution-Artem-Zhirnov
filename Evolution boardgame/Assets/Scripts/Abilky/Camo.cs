@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "Camo", menuName = "configs")]
+[CreateAssetMenu(fileName = "Camo", menuName = "configs/Camo")]
 public class Camo : Mainabilityconfig
 {
     // Start is called before the first frame update

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84dba584dcd8a594cb04cc2e61e23dfc, type: 3}
+  m_Name: Poisonous
+  m_EditorClassIdentifier: 
+  ImageCard: {fileID: 21300000, guid: 130f4ab64b759494aa63aa634524c802, type: 3}
+  LeftDirection: {fileID: 0}
+  RightDirection: {fileID: 0}
+  EnglishName: POISONOUS
+  RussianName: "\u042F\u0414\u041E\u0412\u0418\u0422\u041E\u0415"
+  Description: "\u0425\u0438\u0449\u043D\u0438\u043A, \u0441\u044A\u0435\u0432\u0448\u0438\u0439
+    \u044D\u0442\u043E \u0436\u0438\u0432\u043E\u0442\u043D\u043E\u0435, \u0432 \u0444\u0430\u0437\u0443
+    \u0432\u044B\u043C\u0438\u0440\u0430\u043D\u0438\u044F \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E
+    \u0445\u043E\u0434\u0430 \u043F\u043E\u0433\u0438\u0431\u0430\u0435\u0442."
+  BackgroundColor: {r: 0.9725491, g: 0.9843138, b: 0.9176471, a: 1}

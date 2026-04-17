@@ -5,7 +5,7 @@ using UnityEngine;
 public class Deckconfig : ScriptableObject
 {
     [SerializeField]
-    List<Cardconfig> cardconfigs;
+    public List<Cardconfig> cardconfigs;
     void Start()
     {
         

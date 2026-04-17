@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "Parasite", menuName = "configs")]
+[CreateAssetMenu(fileName = "Parasite", menuName = "configs/Parasite")]
 public class Parasite : Mainabilityconfig
 {
     // Start is called before the first frame update

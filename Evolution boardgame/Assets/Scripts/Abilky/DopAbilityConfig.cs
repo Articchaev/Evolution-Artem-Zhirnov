@@ -4,7 +4,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Dop_Ability_Config", menuName = "configs")]
 public class DopAbilityConfig : ScriptableObject
 {
-    // Start is called before the first frame update
+    [SerializeField]
+    public string EnglishText;
+    [SerializeField]
+    public string RussianText;
+    [SerializeField]
+    public Sprite DopImage;
+    [SerializeField]
+    public Color BackGroundColor;
     void Start()
     {
         

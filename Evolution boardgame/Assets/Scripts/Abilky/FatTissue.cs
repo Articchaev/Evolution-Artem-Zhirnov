@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "FatTissue", menuName = "configs")]
+[CreateAssetMenu(fileName = "FatTissue", menuName = "configs/FatTissue")]
 public class FatTissue : DopAbilityConfig
 {
     // Start is called before the first frame update

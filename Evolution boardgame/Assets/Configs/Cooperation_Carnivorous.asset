@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78e2686baf5576644ac4c548a5ca3724, type: 3}
   m_Name: Cooperation_Carnivorous
   m_EditorClassIdentifier: 
+  dopability: {fileID: 11400000, guid: 5cf8b1ae5650bc74d804db10f0227611, type: 2}
+  mainability: {fileID: 11400000, guid: 29dc9bb7e94112f49901361ca122ccbd, type: 2}

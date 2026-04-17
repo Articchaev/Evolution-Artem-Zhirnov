@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "Piracy", menuName = "configs")]
+[CreateAssetMenu(fileName = "Piracy", menuName = "configs/Piracy")]
 public class Piracy : Mainabilityconfig
 {
     // Start is called before the first frame update

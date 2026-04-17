@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "Cooperation", menuName = "configs")]
+[CreateAssetMenu(fileName = "Cooperation", menuName = "configs/Cooperation")]
 public class Cooperation : Mainabilityconfig
 {
     // Start is called before the first frame update

@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78e2686baf5576644ac4c548a5ca3724, type: 3}
   m_Name: HighBodyWeight_FatTissue
   m_EditorClassIdentifier: 
+  dopability: {fileID: 11400000, guid: 378d07001ad96c74985e76b21fbe853f, type: 2}
+  mainability: {fileID: 11400000, guid: d4495914eb1c83242b20b0658fa64a9b, type: 2}

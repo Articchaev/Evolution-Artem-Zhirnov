@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78e2686baf5576644ac4c548a5ca3724, type: 3}
   m_Name: Parasite_FatTissue
   m_EditorClassIdentifier: 
+  dopability: {fileID: 11400000, guid: 378d07001ad96c74985e76b21fbe853f, type: 2}
+  mainability: {fileID: 11400000, guid: 35423ac949a68d042b87310e333d8ae2, type: 2}

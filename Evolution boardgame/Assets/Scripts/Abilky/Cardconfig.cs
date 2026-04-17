@@ -4,7 +4,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CardConfig", menuName = "configs")]
 public class Cardconfig : ScriptableObject
 {
-    // Start is called before the first frame update
+    [SerializeField]
+    public DopAbilityConfig dopability;
+    [SerializeField]
+    public Mainabilityconfig mainability;
     void Start()
     {
         

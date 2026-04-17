@@ -10,6 +10,8 @@ using UnityEngine.XR;
 public class Card : MonoBehaviour
 {
     [SerializeField]
+    SpriteRenderer dop1;
+    [SerializeField]
     TMP_Text cardname;
     public GameStateContext context;
     [SerializeField]
@@ -36,10 +38,12 @@ public class Card : MonoBehaviour
     public SortingGroup SortingGroup;
     [SerializeField]
     public SpriteRenderer backside;
+    public hand Hand;
     public event Action<Card> onCardClick;
     Vector3 Scale0;
     Vector3 Scale2;
     bool ischosen;
+    Cardconfig config;
     [SerializeField]
     public int layer;
     public int activatenumber = -1;
@@ -52,8 +56,53 @@ public class Card : MonoBehaviour
     public FoodStage foodStage;
     public bool Botikcard = false;
     public Botik botikh;
+    List<Card> abilky = new List<Card>();
+    public bool OnCard = false;
 
-    // Start is called before the first frame update
+    public void SetUpView(Cardconfig abilitycard)
+    {
+        config = abilitycard;
+        cardname.text = abilitycard.mainability.EnglishName;
+        cardnamerus.text = abilitycard.mainability.RussianName;
+        carddescription.text = abilitycard.mainability.Description;
+        background1.color = abilitycard.mainability.BackgroundColor;
+        imagecard.sprite = abilitycard.mainability.ImageCard;
+        if (abilitycard.mainability.RightDirection != null)
+        {
+            directionright.sprite = abilitycard.mainability.RightDirection;
+        }
+        else
+        {
+            directionright.gameObject.SetActive(false);
+        }
+        if (abilitycard.mainability.LeftDirection != null)
+        {
+            directionleft.sprite = abilitycard.mainability.LeftDirection;
+        }
+        else
+        {
+            directionleft.gameObject.SetActive(false);
+        }
+        if (abilitycard.dopability != null)
+        {
+            background2.color = abilitycard.dopability.BackGroundColor;
+            imagedopcard.sprite = abilitycard.dopability.DopImage;
+            dopcard.text = abilitycard.dopability.EnglishText;
+            dopcardrus.text = abilitycard.dopability.RussianText;
+            if (abilitycard.dopability is not Carnivorous)
+            {
+                dop1.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            background2.gameObject.SetActive(false);
+            imagedopcard.gameObject.SetActive(false);
+            dopcard.gameObject.SetActive(false);
+            dopcardrus.gameObject.SetActive(false);
+            dop1.gameObject.SetActive(false);
+        }
+    }
     public void Turn()
     {
         if (context.nowstate is not EvolutionStage)
@@ -122,19 +171,39 @@ public class Card : MonoBehaviour
         }
         if (Ontable) 
         { 
-            if (foodStage.currentfood == null || context.nowstate is not FightingStage || cardstage != 3 || HaveFood >= Needfood)
+            if (foodStage.currentfood != null && context.nowstate is FightingStage && cardstage == 3 && HaveFood >= Needfood)
             {
-                return;
+                foodStage.currentfood.clearSubs();
+                foodStage.currentfood.onCard = true;
+                HaveFood += 1;
+                foodStage.currentfood.transform.SetParent(gameObject.transform);
+                foodBlocks.Add(foodStage.currentfood);
+                RedFood a = foodStage.currentfood;
+                foodStage.Food.Remove(foodStage.currentfood);
+                a.deactivatefood();
+                botikh.PlayBotikFood();
             }
-            foodStage.currentfood.clearSubs();
-            foodStage.currentfood.onCard = true;
-            HaveFood += 1;
-            foodStage.currentfood.transform.SetParent(gameObject.transform);
-            foodBlocks.Add(foodStage.currentfood);
-            RedFood a = foodStage.currentfood;
-            foodStage.Food.Remove(foodStage.currentfood);
-            a.deactivatefood();
-            botikh.PlayBotikFood();
+            else if (context.nowstate is EvolutionStage && cardstage == 3 && Hand.curentcard != null && Hand.curentcard.cardstage != 3)
+            {
+                if (cardstage == 2)
+                {
+                    if (config.dopability == null)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    Hand.curentcard.clearSubs();
+                    Hand.curentcard.Needfood = 0;
+                    Hand.TurnButton.onClick.RemoveListener(Hand.curentcard.Turn);
+                    Hand.curentcard.OnCard = true;
+                    Hand.curentcard.transform.SetParent(transform);
+                    abilky.Add(Hand.curentcard);
+                    Hand.cards.Remove(Hand.curentcard);
+                    Hand.LayoutInstant();
+                }
+            }
         }
         else
         {

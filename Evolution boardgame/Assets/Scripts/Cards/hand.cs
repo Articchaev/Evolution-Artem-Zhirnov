@@ -19,7 +19,7 @@ public class hand : MonoBehaviour
     float arcHeight;
     public List<Card> cards = new List<Card>();
     [SerializeField]
-    Button TurnButton;
+    public Button TurnButton;
     [SerializeField]
     deck Cardsdeck;
     [SerializeField]
@@ -72,8 +72,9 @@ public class hand : MonoBehaviour
         cards.Last().botikh = botik;
         cards.Last().foodStage = foodstageh;
         TurnButton.onClick.AddListener(cards.Last().Turn);
-        LayoutInstant();
-        Cardsdeck.givecard();
+        LayoutInstant(); 
+        Cardconfig config = Cardsdeck.givecard();
+        cards.Last().SetUpView(config);
     }
     void Start()
     {
@@ -85,7 +86,9 @@ public class hand : MonoBehaviour
             cards.Last().botikh = botik;
             cards.Last().foodStage = foodstageh;
             TurnButton.onClick.AddListener(cards.Last().Turn);
-            Cardsdeck.givecard();
+            Cardconfig config = Cardsdeck.givecard();
+            cards.Last().SetUpView(config);
+            cards.Last().Hand = this;
         }
         LayoutInstant();
     }

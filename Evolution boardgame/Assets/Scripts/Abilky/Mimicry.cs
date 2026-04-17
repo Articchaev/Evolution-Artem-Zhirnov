@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "Mimicry", menuName = "configs")]
+[CreateAssetMenu(fileName = "Mimicry", menuName = "configs/Mimicry")]
 public class Mimicry : Mainabilityconfig
 {
     // Start is called before the first frame update

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "Burrowing", menuName = "configs")]
+[CreateAssetMenu(fileName = "Burrowing", menuName = "configs/Burrowing")]
 public class Burrowing : Mainabilityconfig
 {
     // Start is called before the first frame update
