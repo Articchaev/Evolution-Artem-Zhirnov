@@ -31,6 +31,8 @@ public class FoodStage : MonoBehaviour, IGameState
     [SerializeField]
     GameObject Root;
     Vector3 pos;
+    [SerializeField]
+    TableBox YourTable;
     public RedFood currentfood => Food.FirstOrDefault(c => c.active == true);
     public void ChooseFood(RedFood card)
     {
@@ -64,6 +66,7 @@ public class FoodStage : MonoBehaviour, IGameState
         {
             Food.Add(Instantiate(RedFoodprefab, Root.transform));
             Food.Last().onFoodClick += ChooseFood;
+            Food.Last().YourTable = YourTable;
             pos = vector3s[Random.Range(0, 7 - i)];
             vector3s.Remove(pos);
             Food[i].transform.localPosition = pos;

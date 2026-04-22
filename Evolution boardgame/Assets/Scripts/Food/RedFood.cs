@@ -15,11 +15,16 @@ public class RedFood : FoodBlock
     bool ischosen;
     public bool active;
     public bool onCard;
+    public TableBox YourTable;
     public void activatefood()
     {
         if (onCard)
         {
             return;
+        }
+        if (YourTable.curentcard != null)
+        {
+            YourTable.curentcard.deactivatecard();
         }
         onFoodClick?.Invoke(this);
         StartCoroutine(ChangeScale(Scale2, 0.5f));

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 public class TableBox : MonoBehaviour
@@ -8,6 +10,7 @@ public class TableBox : MonoBehaviour
     public List<Card> Creatures = new List<Card>();
     [SerializeField]
     int Otstyp;
+    public Card curentcard => Creatures.FirstOrDefault(c => c.activefightstage == true);
     // Start is called before the first frame update
     public void UpdateLayout()
     {
@@ -15,7 +18,6 @@ public class TableBox : MonoBehaviour
         {
             Creatures[i].transform.localPosition = new Vector3(Otstyp * i - (Creatures.Count - 1) * Otstyp / 2, 0, 0);
             Creatures[i].transform.localRotation = Quaternion.Euler(0, 0, 0);
-            Creatures[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
         }
     }

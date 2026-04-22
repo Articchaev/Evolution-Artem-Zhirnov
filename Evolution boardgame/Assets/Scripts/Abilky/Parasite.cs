@@ -4,7 +4,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Parasite", menuName = "configs/Parasite")]
 public class Parasite : Mainabilityconfig
 {
-    // Start is called before the first frame update
+    public override void OnAbilkaPlay(Card card)
+    {
+        card.Needfood += 2;
+    }
     void Start()
     {
         

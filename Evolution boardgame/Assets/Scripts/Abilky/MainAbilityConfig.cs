@@ -19,6 +19,10 @@ public class Mainabilityconfig : ScriptableObject
     public string Description;
     [SerializeField]
     public Color BackgroundColor;
+    public virtual void OnAbilkaPlay(Card card)
+    {
+
+    }
     void Start()
     {
         

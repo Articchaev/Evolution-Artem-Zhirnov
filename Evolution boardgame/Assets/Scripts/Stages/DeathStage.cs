@@ -30,8 +30,15 @@ public class DeathStage : MonoBehaviour, IGameState
     TableBox BotikTable;
     [SerializeField]
     Botikhand Cardbotikhand;
+    [SerializeField]
+    CarnivorousExecutor executor;
     public void ChangeState()
     {
+        foreach (Card i in executor.PoisonedCreatures)
+        {
+            GameObject.Destroy(YourTable.curentcard.gameObject);
+            YourTable.Creatures.Remove(YourTable.curentcard);
+        }
         if (TableDeck.currentcards == 0)
         {
             if (YourTable.Creatures.Count >= BotikTable.Creatures.Count)
@@ -112,8 +119,9 @@ public class DeathStage : MonoBehaviour, IGameState
         imageevolution.sprite = evolutionactive;
         imagedeath.sprite = deathinactive;
         table.colider.enabled = true;
+        executor.CarnivorousCreatures.Clear();
     }
-    
+
 
     // Start is called before the first frame update
     void Start()

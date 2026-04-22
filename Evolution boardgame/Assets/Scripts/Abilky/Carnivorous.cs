@@ -4,7 +4,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Carnivorous", menuName = "configs/Carnivorous")]
 public class Carnivorous : DopAbilityConfig
 {
-    // Start is called before the first frame update
+    public override void OnAbilkaPlay(Card card)
+    {
+        card.Needfood+=1;
+    }
     void Start()
     {
         

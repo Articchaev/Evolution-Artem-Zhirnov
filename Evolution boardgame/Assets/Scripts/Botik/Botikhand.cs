@@ -21,6 +21,13 @@ public class Botikhand : MonoBehaviour
     float cardSpacing;
     [SerializeField]
     float arcHeight;
+    public TableBox YourTable;
+    [SerializeField]
+    public TableBox botiktable;
+    [SerializeField]
+    public hand Hand;
+    [SerializeField]
+    Botik botik;
     public void AddCard()
     {
         if (Cardsdeck.currentcards <= 0)
@@ -35,6 +42,10 @@ public class Botikhand : MonoBehaviour
         cards.Last().SetUpView(config);
         cards.Last().BotikTurn(3);
         cards.Last().Botikcard = true;
+        cards.Last().YourTable = YourTable;
+        cards.Last().botiktable = botiktable;
+        cards.Last().Hand = Hand;
+        cards.Last().botikh = botik;
     }
     public void LayoutInstant()
     {
@@ -66,6 +77,10 @@ public class Botikhand : MonoBehaviour
             cards.Last().SetUpView(config);
             cards.Last().BotikTurn(3);
             cards.Last().Botikcard = true;
+            cards.Last().YourTable = YourTable;
+            cards.Last().botiktable = botiktable;
+            cards.Last().Hand = Hand;
+            cards.Last().botikh = botik;
         }
         LayoutInstant();
     }

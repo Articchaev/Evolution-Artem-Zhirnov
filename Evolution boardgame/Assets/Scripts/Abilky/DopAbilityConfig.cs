@@ -12,6 +12,10 @@ public class DopAbilityConfig : ScriptableObject
     public Sprite DopImage;
     [SerializeField]
     public Color BackGroundColor;
+    public virtual void OnAbilkaPlay(Card card)
+    {
+
+    }
     void Start()
     {
         

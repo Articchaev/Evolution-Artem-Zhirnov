@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Video;
-using UnityEngine.XR;
 
 public class Card : MonoBehaviour
 {
@@ -43,7 +41,7 @@ public class Card : MonoBehaviour
     Vector3 Scale0;
     Vector3 Scale2;
     bool ischosen;
-    Cardconfig config;
+    public Cardconfig config;
     [SerializeField]
     public int layer;
     public int activatenumber = -1;
@@ -56,8 +54,15 @@ public class Card : MonoBehaviour
     public FoodStage foodStage;
     public bool Botikcard = false;
     public Botik botikh;
-    List<Card> abilky = new List<Card>();
+    public List<Card> abilky = new List<Card>();
     public bool OnCard = false;
+    [SerializeField]
+    public float otstyp;
+    [SerializeField]
+    public BoxCollider2D colider;
+    public TableBox YourTable;
+    public TableBox botiktable;
+    public bool activefightstage = false;
 
     public void SetUpView(Cardconfig abilitycard)
     {
@@ -114,14 +119,14 @@ public class Card : MonoBehaviour
             transform.Rotate(0, 0, 180);
             cardstage = 2;
         }
-        else if (cardstage == 2) 
+        else if (cardstage == 2)
         {
             transform.Rotate(0, 0, 180);
             backside.gameObject.SetActive(true);
             cardstage = 3;
         }
         else
-        { 
+        {
             cardstage = 1;
             backside.gameObject.SetActive(false);
         }
@@ -161,17 +166,43 @@ public class Card : MonoBehaviour
         ischosen = false;
         SortingGroup.sortingOrder = layer;
         active = false;
-        
+
+    }
+    public void activatefightcard()
+    {
+        if (YourTable.Creatures.Contains(this))
+        {
+            foreach (Card i in YourTable.Creatures)
+            {
+                if (i.activefightstage)
+                {
+                    i.deactivatefightcard();
+                }
+            }
+        }
+        else if (botiktable.Creatures.Contains(this))
+        {
+            foreach (Card i in botiktable.Creatures)
+            {
+                if (i.activefightstage)
+                {
+                    i.deactivatefightcard();
+                }
+            }
+        }
+        StartCoroutine(ChangeScale(Scale2, 0.5f));
+        activefightstage = true;
+    }
+    public void deactivatefightcard()
+    {
+        StartCoroutine(ChangeScale(Scale0, 0.5f));
+        activefightstage = false;
     }
     private void OnMouseDown()
     {
-        if (Botikcard)
+        if (Ontable)
         {
-            return;
-        }
-        if (Ontable) 
-        { 
-            if (foodStage.currentfood != null && context.nowstate is FightingStage && cardstage == 3 && HaveFood >= Needfood)
+            if (foodStage.currentfood != null && context.nowstate is FightingStage && cardstage == 3 && HaveFood < Needfood && activefightstage == false && !Botikcard)
             {
                 foodStage.currentfood.clearSubs();
                 foodStage.currentfood.onCard = true;
@@ -183,11 +214,12 @@ public class Card : MonoBehaviour
                 a.deactivatefood();
                 botikh.PlayBotikFood();
             }
-            else if (context.nowstate is EvolutionStage && cardstage == 3 && Hand.curentcard != null && Hand.curentcard.cardstage != 3)
+            else if (context.nowstate is EvolutionStage && cardstage == 3 && Hand.curentcard != null && Hand.curentcard.cardstage != 3 && (!Botikcard || Hand.curentcard.config.mainability is Parasite))
             {
-                if (cardstage == 2)
+                Card c = Hand.curentcard;
+                if (Hand.curentcard.cardstage == 2)
                 {
-                    if (config.dopability == null)
+                    if (Hand.curentcard.config.dopability == null)
                     {
                         return;
                     }
@@ -199,6 +231,12 @@ public class Card : MonoBehaviour
                     abilky.Add(Hand.curentcard);
                     Hand.cards.Remove(Hand.curentcard);
                     Hand.LayoutInstant();
+                    c.transform.localScale = new Vector3(1, 1, 1);
+                    c.transform.localEulerAngles = new Vector3(180, 0, 0);
+                    c.transform.localPosition = new Vector3(0, abilky.Count * otstyp, 0);
+                    c.SortingGroup.sortingOrder = -abilky.Count;
+                    c.colider.enabled = false;
+                    c.config.dopability.OnAbilkaPlay(this);
                 }
                 else
                 {
@@ -210,11 +248,37 @@ public class Card : MonoBehaviour
                     abilky.Add(Hand.curentcard);
                     Hand.cards.Remove(Hand.curentcard);
                     Hand.LayoutInstant();
+                    c.transform.localScale = new Vector3(1, 1, 1);
+                    c.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    c.transform.localPosition = new Vector3(0, abilky.Count * otstyp, 0);
+                    c.SortingGroup.sortingOrder = -abilky.Count;
+                    c.colider.enabled = false;
+                    c.config.mainability.OnAbilkaPlay(this);
                 }
+                botikh.botikdosmth();
+            }
+            else if (context.nowstate is FightingStage && cardstage == 3)
+            {
+                if (!activefightstage)
+                {
+                    activatefightcard();
+                }
+                else
+                {
+                    deactivatefightcard();
+                }
+            }
+            else
+            {
+                return;
             }
         }
         else
         {
+            if (OnCard)
+            {
+                return;
+            }
             if (!ischosen)
             {
                 activatecard();
@@ -224,7 +288,7 @@ public class Card : MonoBehaviour
                 deactivatecard();
             }
         }
-        
+
     }
     public IEnumerator ChangeScale(Vector3 scale2, float timex)
     {
@@ -259,6 +323,6 @@ public class Card : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

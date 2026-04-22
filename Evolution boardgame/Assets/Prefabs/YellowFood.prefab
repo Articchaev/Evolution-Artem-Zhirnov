@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7821677570054906101}
+  - component: {fileID: 7800310824146854799}
   m_Layer: 0
   m_Name: YellowFood
   m_TagString: Untagged
@@ -32,6 +33,18 @@ Transform:
   - {fileID: 3961493859742147041}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7800310824146854799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5126769443361581587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab5bfdd9d51472d4a8ca8f8c21bbe555, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8907991522512744589
 GameObject:
   m_ObjectHideFlags: 0

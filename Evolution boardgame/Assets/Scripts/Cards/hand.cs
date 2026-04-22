@@ -28,6 +28,13 @@ public class hand : MonoBehaviour
     FoodStage foodstageh;
     [SerializeField]
     Botik botik;
+    [SerializeField]
+    Table table;
+    [SerializeField]
+    public TableBox YourTable;
+    [SerializeField]
+    public TableBox botiktable;
+    int handstage = 1;
     
     public Card curentcard => cards.FirstOrDefault(c => c.active == true);
     public void LayoutInstant()
@@ -44,7 +51,15 @@ public class hand : MonoBehaviour
             float targetRot = -t * maxRotation;
 
             cards[i].transform.localPosition = targetPos;
-            cards[i].transform.localRotation = Quaternion.Euler(0, 0, targetRot);
+            if(handstage == 2)
+            {
+                cards[i].transform.localRotation = Quaternion.Euler(180, 0, -targetRot);
+            }
+            else
+            {
+                cards[i].transform.localRotation = Quaternion.Euler(0, 0, targetRot);
+            }
+            
             cards[i].transform.SetSiblingIndex(i); // порядок отрисовки
             cards[i].SortingGroup.sortingOrder = n*10 - i;
         }
@@ -75,6 +90,35 @@ public class hand : MonoBehaviour
         LayoutInstant(); 
         Cardconfig config = Cardsdeck.givecard();
         cards.Last().SetUpView(config);
+        cards.Last().YourTable = YourTable;
+        cards.Last().botiktable = botiktable;
+    }
+    public void Turn1()
+    {
+        if (contexth.nowstate is not EvolutionStage)
+        {
+            return;
+        }
+        if (handstage == 2)
+        {
+            handstage++;
+            table.colider.enabled = true;
+        }
+        else if (handstage == 1)
+        {
+            handstage++;
+            table.colider.enabled = false;
+        }
+        else
+        {
+            handstage = 1;
+            table.colider.enabled = false;
+        }
+
+    }
+    public void OnDestroy()
+    {
+        TurnButton.onClick.RemoveAllListeners();
     }
     void Start()
     {
@@ -89,8 +133,11 @@ public class hand : MonoBehaviour
             Cardconfig config = Cardsdeck.givecard();
             cards.Last().SetUpView(config);
             cards.Last().Hand = this;
+            cards.Last().YourTable = YourTable;
+            cards.Last().botiktable = botiktable;
         }
         LayoutInstant();
+        TurnButton.onClick.AddListener(Turn1);
     }
     // Update is called once per frame
     void Update()

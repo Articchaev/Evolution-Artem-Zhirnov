@@ -18,6 +18,8 @@ public class Table : MonoBehaviour
     Botikhand botikhand;
     [SerializeField]
     TableBox botiktable;
+    [SerializeField]
+    Botik botikmosg;
     private void OnMouseDown()
     {
         PlayCard();
@@ -34,25 +36,15 @@ public class Table : MonoBehaviour
         Hand.curentcard.Ontable = true;
         Hand.curentcard.transform.SetParent(YourTable.transform);
         YourTable.Creatures.Add(Hand.curentcard);
+        Card c = Hand.curentcard;
         Hand.cards.Remove(Hand.curentcard);
+        c.StopAllCoroutines();
+        c.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Hand.LayoutInstant();
-        PlayBotikCard();
+        botikmosg.botikdosmth();
 
     }
-    public void PlayBotikCard()
-    {
-        if (botikhand.cards.Count <= 0)
-        {
-            return;
-        }
-        Card card = botikhand.cards[Random.Range(0, botikhand.cards.Count - 1)];
-        card.Needfood = 1;
-        card.Ontable = true;
-        card.transform.SetParent(botiktable.transform);
-        botiktable.Creatures.Add(card);
-        botikhand.cards.Remove(card);
-        botikhand.LayoutInstant();
-    }
+    
     // Start is called before the first frame update
     void Start()
     {

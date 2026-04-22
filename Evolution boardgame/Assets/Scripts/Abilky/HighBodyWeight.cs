@@ -4,7 +4,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "HighBodyWeight", menuName = "configs/HighBodyWeight")]
 public class HighBodyWeight : Mainabilityconfig
 {
-    // Start is called before the first frame update
+    public override void OnAbilkaPlay(Card card)
+    {
+        card.Needfood+=1;
+    }
     void Start()
     {
         
