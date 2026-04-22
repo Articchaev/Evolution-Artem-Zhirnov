@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
+using System.Xml;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -12,6 +14,14 @@ public class Botik : MonoBehaviour
     TableBox botiktable;
     [SerializeField]
     Botikhand botikhand;
+    [SerializeField]
+    CarnivorousExecutor executor;
+    [SerializeField]
+    BlueFood bluefood;
+    [SerializeField]
+    TableBox YourTable;
+    [SerializeField]
+    TableBox EnemyTable;
     public void PlayBotikFood()
     {
         if (botiktable.Creatures.Count <=0 || foodstage.Food.Count <= 0 || botiktable.Creatures.Where(creature => creature.HaveFood < creature.Needfood).Count() <= 0)
@@ -28,6 +38,94 @@ public class Botik : MonoBehaviour
         RedFood a = food;
         foodstage.Food.Remove(food);
         a.deactivatefood();
+    }
+    public void botikuseability()
+    {
+        foreach (Card i in botiktable.Creatures)
+        {
+            if (i.abilky.FirstOrDefault(card2 => card2.config.dopability is Carnivorous && card2.cardstage == 2) != null)
+            {
+                if (executor.CarnivorousCreatures.Contains(i) || i.HaveFood >= i.Needfood)
+                {
+                    continue;
+                }
+                PlayBotikcarnivorous(i);
+                return;
+            }
+        }
+        PlayBotikFood();
+    }
+    public void PlayBotikcarnivorous(Card creature)
+    {
+        Card targetcreature = null;
+        if (cantarget(creature).Count() == 0)
+        {
+            return;
+        }
+        targetcreature = cantarget(creature)[Random.Range(0, cantarget(creature).Count)];
+        executor.CarnivorousCreatures.Add(creature);
+        if (targetcreature.abilky.FirstOrDefault(card => card.config.mainability is Running && card.cardstage == 1) != null)
+        {
+            int k = Random.Range(0, 2);
+            if (k == 0)
+            {
+                return;
+            }
+        }
+        creature.foodBlocks.Add(GameObject.Instantiate(bluefood, creature.transform));
+        creature.HaveFood += 1;
+        if (targetcreature.abilky.FirstOrDefault(card => card.config.mainability is Poisonous && card.cardstage == 1) != null)
+        {
+            executor.PoisonedCreatures.Add(creature);
+        }
+        if (creature.HaveFood < creature.Needfood)
+        {
+            creature.foodBlocks.Add(GameObject.Instantiate(bluefood, creature.transform));
+            creature.HaveFood += 1;
+        }
+        GameObject.Destroy(targetcreature.gameObject);
+        YourTable.Creatures.Remove(targetcreature);
+        Card ScavengerCreature = EnemyTable.Creatures.FirstOrDefault(card => card.abilky.FirstOrDefault(card2 => card2.config.mainability is Scavenger && card2.cardstage == 1) != null);
+        if (ScavengerCreature == null)
+        {
+            ScavengerCreature = YourTable.Creatures.FirstOrDefault(card => card.abilky.FirstOrDefault(card2 => card2.config.mainability is Scavenger && card2.cardstage == 1) != null);
+        }
+        if (ScavengerCreature != null)
+        {
+            ScavengerCreature.foodBlocks.Add(GameObject.Instantiate(bluefood, ScavengerCreature.transform));
+            ScavengerCreature.HaveFood += 1;
+        }
+    }
+    public List<Card> cantarget(Card atackcreature)
+    {
+        List<Card> targets = new List<Card>();
+        foreach (Card card in YourTable.Creatures)
+        {
+            if (atackcreature.abilky.FirstOrDefault(card => card.config.mainability is Swimming && card.cardstage == 1) != null
+                    && card.abilky.FirstOrDefault(card => card.config.mainability is Swimming && card.cardstage == 1) == null
+                    || atackcreature.abilky.FirstOrDefault(card => card.config.mainability is Swimming && card.cardstage == 1) == null
+                    && card.abilky.FirstOrDefault(card => card.config.mainability is Swimming && card.cardstage == 1) != null)
+            {
+                continue;
+            }
+            if (atackcreature.abilky.FirstOrDefault(card => card.config.mainability is HighBodyWeight && card.cardstage == 1) == null
+                    && card.abilky.FirstOrDefault(card => card.config.mainability is HighBodyWeight && card.cardstage == 1) != null)
+            {
+                continue;
+            }
+            if (atackcreature.abilky.FirstOrDefault(card => card.config.mainability is SharpVision && card.cardstage == 1) == null
+                    && card.abilky.FirstOrDefault(card => card.config.mainability is Camo && card.cardstage == 1) != null)
+            {
+                continue;
+            }
+            if (card.abilky.FirstOrDefault(card => card.config.mainability is Burrowing && card.cardstage == 1) != null
+                    && card.HaveFood >= card.Needfood)
+            {
+                continue;
+            }
+            targets.Add(card);
+        }
+        return targets;
     }
     public void PlayBotikCard()
     {
@@ -55,6 +153,10 @@ public class Botik : MonoBehaviour
             {
                 if (card.config.dopability != null && card.config.dopability is Carnivorous && creature.abilky.FirstOrDefault(card2 => card2.config.dopability is Carnivorous && card2.cardstage == 2) == null)
                 {
+                    if (creature.abilky.FirstOrDefault(card => card.config.mainability is Scavenger && card.cardstage == 1))
+                    {
+                        continue;
+                    }
                     playdopability = true;
                     cardtoplay = card;
                     creatureonplay = creature;
@@ -62,12 +164,16 @@ public class Botik : MonoBehaviour
                 }
                 if (creature.abilky.FirstOrDefault(card2 => card2.config.mainability.GetType() == card.config.mainability.GetType() && card2.cardstage == 1) == null)
                 {
+                    if (creature.abilky.FirstOrDefault(card => card.config.dopability is Carnivorous && card.cardstage == 2) && card.config.mainability is Scavenger)
+                    {
+                        continue;
+                    }
                     playdopability = false;
                     cardtoplay = card;
                     creatureonplay = creature;
                     break;
                 }
-                if (card.config.dopability != null && card.config.dopability is FatTissue && creature.abilky.FirstOrDefault(card2 => card2.config.dopability is FatTissue && card2.cardstage == 2) == null)
+                if (card.config.dopability != null && card.config.dopability is FatTissue)
                 {
                     playdopability = true;
                     cardtoplay = card;

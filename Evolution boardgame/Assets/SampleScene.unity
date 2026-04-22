@@ -1727,6 +1727,7 @@ GameObject:
   - component: {fileID: 519420033}
   - component: {fileID: 519420035}
   - component: {fileID: 519420036}
+  - component: {fileID: 519420037}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1850,6 +1851,7 @@ MonoBehaviour:
   Hand: {fileID: 737902689}
   RedFoodprefab: {fileID: 4034365972320514026, guid: 52c5774357eff474a805a4dfd701f628, type: 3}
   Root: {fileID: 96419832}
+  YourTable: {fileID: 954882840}
 --- !u!114 &519420035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1893,6 +1895,26 @@ MonoBehaviour:
   TableDeck: {fileID: 636224677}
   BotikTable: {fileID: 1429852576}
   Cardbotikhand: {fileID: 1054716302}
+  executor: {fileID: 519420037}
+  CardHiber: []
+--- !u!114 &519420037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4c9cd31fae5151428ed496ff0cb4091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  YourTable: {fileID: 954882840}
+  EnemyTable: {fileID: 1429852576}
+  bluefood: {fileID: 2082040245607628255, guid: c1a905f306e604f4481df40f436621f3, type: 3}
+  botik: {fileID: 1054716304}
+  CarnivorousCreatures: []
+  PoisonedCreatures: []
 --- !u!1001 &564540593
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2508,6 +2530,9 @@ MonoBehaviour:
   contexth: {fileID: 570282101}
   foodstageh: {fileID: 519420034}
   botik: {fileID: 1054716304}
+  table: {fileID: 1215931444}
+  YourTable: {fileID: 954882840}
+  botiktable: {fileID: 1429852576}
 --- !u!224 &751927402 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1532085014698326667, guid: b2bac2cb7f554b241949c0de0a5a46a7, type: 3}
@@ -3197,6 +3222,10 @@ MonoBehaviour:
   maxRotation: 33
   cardSpacing: 1.71
   arcHeight: 1.14
+  YourTable: {fileID: 954882840}
+  botiktable: {fileID: 1429852576}
+  Hand: {fileID: 737902689}
+  botik: {fileID: 1054716304}
 --- !u!4 &1054716303
 Transform:
   m_ObjectHideFlags: 0
@@ -3226,6 +3255,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   foodstage: {fileID: 519420034}
   botiktable: {fileID: 1429852576}
+  botikhand: {fileID: 1054716302}
+  executor: {fileID: 519420037}
+  bluefood: {fileID: 2082040245607628255, guid: c1a905f306e604f4481df40f436621f3, type: 3}
+  YourTable: {fileID: 954882840}
+  EnemyTable: {fileID: 1429852576}
 --- !u!1 &1066089048 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6687115162026055397, guid: 02fcea82f0b23a8499639de945e26f8f, type: 3}
@@ -3395,6 +3429,7 @@ MonoBehaviour:
   colider: {fileID: 1215931447}
   botikhand: {fileID: 1054716302}
   botiktable: {fileID: 1429852576}
+  botikmosg: {fileID: 1054716304}
 --- !u!4 &1215931445
 Transform:
   m_ObjectHideFlags: 0

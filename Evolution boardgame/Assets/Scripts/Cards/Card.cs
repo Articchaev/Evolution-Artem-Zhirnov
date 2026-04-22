@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -63,6 +64,7 @@ public class Card : MonoBehaviour
     public TableBox YourTable;
     public TableBox botiktable;
     public bool activefightstage = false;
+    public bool hibernationabilka = false;
 
     public void SetUpView(Cardconfig abilitycard)
     {
@@ -137,6 +139,7 @@ public class Card : MonoBehaviour
         {
             transform.localEulerAngles = new Vector3(0, 0, 180);
             cardstage = 2;
+            backside.gameObject.SetActive(false);
         }
         else if (x == 3)
         {
@@ -212,7 +215,7 @@ public class Card : MonoBehaviour
                 RedFood a = foodStage.currentfood;
                 foodStage.Food.Remove(foodStage.currentfood);
                 a.deactivatefood();
-                botikh.PlayBotikFood();
+                botikh.botikuseability();
             }
             else if (context.nowstate is EvolutionStage && cardstage == 3 && Hand.curentcard != null && Hand.curentcard.cardstage != 3 && (!Botikcard || Hand.curentcard.config.mainability is Parasite))
             {
@@ -220,6 +223,10 @@ public class Card : MonoBehaviour
                 if (Hand.curentcard.cardstage == 2)
                 {
                     if (Hand.curentcard.config.dopability == null)
+                    {
+                        return;
+                    }
+                    if (abilky.FirstOrDefault(card => card.config.mainability is Scavenger && card.cardstage == 1) && c.config.dopability is Carnivorous)
                     {
                         return;
                     }
@@ -240,6 +247,11 @@ public class Card : MonoBehaviour
                 }
                 else
                 {
+                    if (abilky.FirstOrDefault(card => card.config.dopability is Carnivorous && card.cardstage == 2) && c.config.mainability is Scavenger)
+                    {
+                        return;
+                    }
+                    
                     Hand.curentcard.clearSubs();
                     Hand.curentcard.Needfood = 0;
                     Hand.TurnButton.onClick.RemoveListener(Hand.curentcard.Turn);

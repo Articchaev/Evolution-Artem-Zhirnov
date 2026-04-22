@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -32,15 +33,20 @@ public class DeathStage : MonoBehaviour, IGameState
     Botikhand Cardbotikhand;
     [SerializeField]
     CarnivorousExecutor executor;
+    [SerializeField]
+    List<Card> CardHiber = new List<Card>();
     public void ChangeState()
     {
-        foreach (Card i in executor.PoisonedCreatures)
-        {
-            GameObject.Destroy(YourTable.curentcard.gameObject);
-            YourTable.Creatures.Remove(YourTable.curentcard);
-        }
         if (TableDeck.currentcards == 0)
         {
+            DieCreatures();
+            foreach (Card i in CardHiber)
+            {
+                GameObject.Destroy(i.gameObject);
+                YourTable.Creatures.Remove(i);
+                BotikTable.Creatures.Remove(i);
+            }
+            CardHiber.Clear();
             if (YourTable.Creatures.Count >= BotikTable.Creatures.Count)
             {
 
@@ -51,40 +57,22 @@ public class DeathStage : MonoBehaviour, IGameState
                 SceneManager.LoadScene(3);
             }
         }
-        List<Card> CardDel = new List<Card>();
-        foreach (Card i in YourTable.Creatures)
+        DieCreatures();
+        foreach (Card i in CardHiber)
         {
-            if (i.HaveFood < i.Needfood)
+            if (i.hibernationabilka)
             {
-                CardDel.Add(i);
+                i.hibernationabilka = false;
             }
-            i.HaveFood = 0;
-            foreach (FoodBlock j in i.foodBlocks)
+            else
             {
-                GameObject.Destroy(j.gameObject);
+                GameObject.Destroy(i.gameObject);
+                YourTable.Creatures.Remove(i);
+                BotikTable.Creatures.Remove(i);
             }
-            i.foodBlocks.Clear();
         }
-        foreach (Card i in BotikTable.Creatures)
-        {
-            if (i.HaveFood < i.Needfood)
-            {
-                CardDel.Add(i);
-            }
-            i.HaveFood = 0;
-            foreach (FoodBlock j in i.foodBlocks)
-            {
-                GameObject.Destroy(j.gameObject);
-            }
-            i.foodBlocks.Clear();
-        }
-        foreach (Card i in CardDel)
-        {
-            GameObject.Destroy(i.gameObject);
-            YourTable.Creatures.Remove(i);
-            BotikTable.Creatures.Remove(i);
-        }
-        CardDel.Clear();
+        CardHiber.Clear();
+       
         if (YourTable.Creatures.Count == 0)
         {
             for (int i = 0; i < 6; i++)
@@ -121,7 +109,60 @@ public class DeathStage : MonoBehaviour, IGameState
         table.colider.enabled = true;
         executor.CarnivorousCreatures.Clear();
     }
-
+    public void DieCreatures()
+    {
+        List<Card> CardDel = new List<Card>();
+        foreach (Card i in YourTable.Creatures)
+        {
+            if (i.HaveFood < i.Needfood)
+            {
+                if (i.abilky.FirstOrDefault(card => card.config.mainability is Hibernation && card.cardstage == 1) != null)
+                {
+                    CardHiber.Add(i);
+                }
+                else
+                {
+                    CardDel.Add(i);
+                }
+            }
+            if (i.abilky.FirstOrDefault(card => card.config.mainability is Hibernation && card.cardstage == 1) != null && CardHiber.Contains(i) == false)
+            {
+                i.hibernationabilka = true;
+            }
+            i.HaveFood = 0;
+            foreach (FoodBlock j in i.foodBlocks)
+            {
+                GameObject.Destroy(j.gameObject);
+            }
+            i.foodBlocks.Clear();
+        }
+        foreach (Card i in BotikTable.Creatures)
+        {
+            if (i.HaveFood < i.Needfood)
+            {
+                CardDel.Add(i);
+            }
+            i.HaveFood = 0;
+            foreach (FoodBlock j in i.foodBlocks)
+            {
+                GameObject.Destroy(j.gameObject);
+            }
+            i.foodBlocks.Clear();
+        }
+        foreach (Card i in executor.PoisonedCreatures)
+        {
+            GameObject.Destroy(i.gameObject);
+            YourTable.Creatures.Remove(i);
+            BotikTable.Creatures.Remove(i);
+        }
+        foreach (Card i in CardDel)
+        {
+            GameObject.Destroy(i.gameObject);
+            YourTable.Creatures.Remove(i);
+            BotikTable.Creatures.Remove(i);
+        }
+        CardDel.Clear();
+    }
 
     // Start is called before the first frame update
     void Start()

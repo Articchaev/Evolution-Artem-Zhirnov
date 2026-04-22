@@ -4,7 +4,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Hibernation", menuName = "configs/Hibernation")]
 public class Hibernation : Mainabilityconfig
 {
-    // Start is called before the first frame update
+    public override void OnAbilkaPlay(Card card)
+    {
+        card.hibernationabilka = true;
+    }
     void Start()
     {
         
