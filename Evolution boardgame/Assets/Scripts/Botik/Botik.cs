@@ -226,7 +226,7 @@ public class Botik : MonoBehaviour
     }
     public void botikdosmth()
     {
-        if (botiktable.Creatures.Count < 2)
+        if (botiktable.Creatures.Count <= 2)
         {
             PlayBotikCard();
             return;
@@ -235,11 +235,11 @@ public class Botik : MonoBehaviour
         {
             PlayBotikability();
         }
-        else if (botiktable.Creatures.Count() == 3 && botiktable.Creatures.Select(creature => creature.abilky.Count()).Sum() <= 6)
+        else if (botiktable.Creatures.Count() == 3 && botiktable.Creatures.Select(creature => creature.abilky.Count()).Sum() <= 3)
         {
             PlayBotikability();
         }
-        else if (botiktable.Creatures.Count() == 3 && botiktable.Creatures.Select(creature => creature.abilky.Count()).Sum() >= 6)
+        else if (botiktable.Creatures.Count() == 3 && botiktable.Creatures.Select(creature => creature.abilky.Count()).Sum() >= 3)
         {
             PlayBotikCard();
         }

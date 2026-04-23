@@ -35,6 +35,10 @@ public class DeathStage : MonoBehaviour, IGameState
     CarnivorousExecutor executor;
     [SerializeField]
     List<Card> CardHiber = new List<Card>();
+    [SerializeField]
+    GrazingExecutor executorGrazing;
+    [SerializeField]
+    PiracyExecutor piracyexecutor;
     public void ChangeState()
     {
         if (TableDeck.currentcards == 0)
@@ -71,6 +75,7 @@ public class DeathStage : MonoBehaviour, IGameState
                 BotikTable.Creatures.Remove(i);
             }
         }
+
         CardHiber.Clear();
        
         if (YourTable.Creatures.Count == 0)
@@ -107,7 +112,6 @@ public class DeathStage : MonoBehaviour, IGameState
         imageevolution.sprite = evolutionactive;
         imagedeath.sprite = deathinactive;
         table.colider.enabled = true;
-        executor.CarnivorousCreatures.Clear();
     }
     public void DieCreatures()
     {
@@ -162,6 +166,9 @@ public class DeathStage : MonoBehaviour, IGameState
             BotikTable.Creatures.Remove(i);
         }
         CardDel.Clear();
+        executor.CarnivorousCreatures.Clear();
+        executorGrazing.GrazingCreatures.Clear();
+        piracyexecutor.PiracyCreatures.Clear();
     }
 
     // Start is called before the first frame update

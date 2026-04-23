@@ -92,6 +92,7 @@ public class hand : MonoBehaviour
         cards.Last().SetUpView(config);
         cards.Last().YourTable = YourTable;
         cards.Last().botiktable = botiktable;
+        cards.Last().Hand = this;
     }
     public void Turn1()
     {
