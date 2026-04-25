@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
+using static UnityEngine.GraphicsBuffer;
 
 public class Card : MonoBehaviour
 {
@@ -61,10 +63,102 @@ public class Card : MonoBehaviour
     public float otstyp;
     [SerializeField]
     public BoxCollider2D colider;
+    [SerializeField]
+    public YellowFood yellowfood;
+    [SerializeField]
+    public BlueFood bluefood;
     public TableBox YourTable;
     public TableBox botiktable;
     public bool activefightstage = false;
     public bool hibernationabilka = false;
+
+   
+    
+    public void UseCooperation()
+    {
+        Card target = null;
+        if (!Botikcard)
+        {
+            if (abilky.FirstOrDefault(card => card.config.mainability is Cooperation && card.cardstage == 1) != null && YourTable.Creatures[0] != this)
+            {
+                target = YourTable.Creatures[YourTable.Creatures.IndexOf(this) - 1];
+            }
+            else if (YourTable.Creatures.Last() != this && YourTable.Creatures[YourTable.Creatures.IndexOf(this) + 1].abilky.FirstOrDefault(card => card.config.mainability is Cooperation && card.cardstage == 1) != null)
+            {
+                target = YourTable.Creatures[YourTable.Creatures.IndexOf(this) + 1];
+            }
+        }
+        else
+        {
+            if (abilky.FirstOrDefault(card => card.config.mainability is Cooperation && card.cardstage == 1) != null && botiktable.Creatures[0] != this)
+            {
+                target = botiktable.Creatures[botiktable.Creatures.IndexOf(this) - 1];
+            }
+            else if (botiktable.Creatures.Last() != this && botiktable.Creatures[botiktable.Creatures.IndexOf(this) + 1].abilky.FirstOrDefault(card => card.config.mainability is Cooperation && card.cardstage == 1) != null)
+            {
+                target = botiktable.Creatures[botiktable.Creatures.IndexOf(this) + 1];
+            }
+        }
+
+        if (target == null)
+        {
+            return;
+        }
+        if (target.HaveFood >= target.Needfood + target.abilky.Count(card => card.config.dopability is FatTissue && card.cardstage == 2))
+        {
+            return;
+        }
+        target.foodBlocks.Add(GameObject.Instantiate(bluefood, target.transform));
+        target.HaveFood += 1;
+    }
+
+
+
+    public void UseCommunication()
+    {
+        Card target = null;
+        if (!Botikcard)
+        {
+            if (abilky.FirstOrDefault(card => card.config.mainability is Communication && card.cardstage == 1) != null && YourTable.Creatures[0] != this)
+            {
+                target = YourTable.Creatures[YourTable.Creatures.IndexOf(this) - 1];
+            }
+            else if (YourTable.Creatures.Last() != this && YourTable.Creatures[YourTable.Creatures.IndexOf(this) + 1].abilky.FirstOrDefault(card => card.config.mainability is Communication && card.cardstage == 1) != null)
+            {
+                target = YourTable.Creatures[YourTable.Creatures.IndexOf(this) + 1];
+            }
+
+        }
+        else
+        {
+            if (abilky.FirstOrDefault(card => card.config.mainability is Communication && card.cardstage == 1) != null && botiktable.Creatures[0] != this)
+            {
+                target = botiktable.Creatures[botiktable.Creatures.IndexOf(this) - 1];
+            }
+            else if (botiktable.Creatures.Last() != this && botiktable.Creatures[botiktable.Creatures.IndexOf(this) + 1].abilky.FirstOrDefault(card => card.config.mainability is Communication && card.cardstage == 1) != null)
+            {
+                target = botiktable.Creatures[botiktable.Creatures.IndexOf(this) + 1];
+            }
+        }
+        if (foodStage.Food.Count() == 0 || target == null)
+        {
+            return;
+        }
+        if (target.HaveFood >= target.Needfood + target.abilky.Count(card => card.config.dopability is FatTissue && card.cardstage == 2))
+        {
+            return;
+        }
+        RedFood f = foodStage.Food[0];
+        f.onCard = true;
+        f.transform.SetParent(target.transform);
+        f.deactivatefood();
+        foodStage.Food.Remove(f);
+        target.foodBlocks.Add(f);
+        target.foodBlocks.Add(f);
+        target.HaveFood += 1;
+    }
+
+
 
     public void SetUpView(Cardconfig abilitycard)
     {
@@ -78,18 +172,27 @@ public class Card : MonoBehaviour
         {
             directionright.sprite = abilitycard.mainability.RightDirection;
         }
+        
+        
         else
         {
             directionright.gameObject.SetActive(false);
         }
+        
+        
         if (abilitycard.mainability.LeftDirection != null)
         {
             directionleft.sprite = abilitycard.mainability.LeftDirection;
         }
+        
+        
         else
         {
             directionleft.gameObject.SetActive(false);
         }
+       
+        
+        
         if (abilitycard.dopability != null)
         {
             background2.color = abilitycard.dopability.BackGroundColor;
@@ -101,6 +204,9 @@ public class Card : MonoBehaviour
                 dop1.gameObject.SetActive(false);
             }
         }
+        
+        
+        
         else
         {
             background2.gameObject.SetActive(false);
@@ -110,6 +216,10 @@ public class Card : MonoBehaviour
             dop1.gameObject.SetActive(false);
         }
     }
+    
+    
+    
+   
     public void Turn()
     {
         if (context.nowstate is not EvolutionStage)
@@ -133,6 +243,11 @@ public class Card : MonoBehaviour
             backside.gameObject.SetActive(false);
         }
     }
+    
+    
+    
+    
+    
     public void BotikTurn(int x)
     {
         if (x == 2)
@@ -154,6 +269,11 @@ public class Card : MonoBehaviour
             backside.gameObject.SetActive(false);
         }
     }
+  
+    
+    
+    
+    
     public void activatecard()
     {
         onCardClick?.Invoke(this);
@@ -163,6 +283,10 @@ public class Card : MonoBehaviour
         SortingGroup.sortingOrder = 10000;
         active = true;
     }
+    
+    
+    
+    
     public void deactivatecard()
     {
         StartCoroutine(ChangeScale(Scale0, 0.5f));
@@ -171,6 +295,10 @@ public class Card : MonoBehaviour
         active = false;
 
     }
+   
+    
+    
+    
     public void activatefightcard()
     {
         if (YourTable.Creatures.Contains(this))
@@ -196,27 +324,73 @@ public class Card : MonoBehaviour
         StartCoroutine(ChangeScale(Scale2, 0.5f));
         activefightstage = true;
     }
+   
+    
+    
+    
+    
+    
     public void deactivatefightcard()
     {
         StartCoroutine(ChangeScale(Scale0, 0.5f));
         activefightstage = false;
     }
+    
+    
+    
+    
+    public void AbilkaRovno()
+    {
+        for (int i = 0; i < abilky.Count(); i++)
+        {
+            abilky[i].transform.localPosition = new Vector3(0, (i + 1) * otstyp, 0);
+        }
+    }
+    
+    
+    
+    
     private void OnMouseDown()
     {
         if (Ontable)
         {
-            if (foodStage.currentfood != null && context.nowstate is FightingStage && cardstage == 3 && HaveFood < Needfood && activefightstage == false && !Botikcard)
+            if (foodStage.currentfood != null && context.nowstate is FightingStage && cardstage == 3 && activefightstage == false && !Botikcard)
             {
-                foodStage.currentfood.clearSubs();
-                foodStage.currentfood.onCard = true;
+                FoodBlock food  = null;
+                if (HaveFood < Needfood)
+                {
+                    food = foodStage.currentfood;
+                }
+                else if (abilky.FirstOrDefault(card => card.config.dopability is FatTissue && card.cardstage == 2) != null 
+                    && HaveFood < Needfood + abilky.Count(card => card.config.dopability is FatTissue && card.cardstage == 2))
+                {
+                    GameObject.Destroy(foodStage.currentfood.gameObject);
+                    foodStage.Food.Remove(foodStage.currentfood);
+                    food = GameObject.Instantiate(yellowfood, gameObject.transform);
+                }
+                if (YourTable.Creatures.IndexOf(this) != 0
+                    && this.abilky.FirstOrDefault(card => card.config.mainability is Symbiosis && card.cardstage == 1) != null
+                    && YourTable.Creatures[YourTable.Creatures.IndexOf(this) - 1].HaveFood < YourTable.Creatures[YourTable.Creatures.IndexOf(this) - 1].Needfood)
+                {
+                    return;
+                }
+                if (food is RedFood redfood)
+                {
+                    redfood.onCard = true;
+                    redfood.clearSubs();
+                    foodStage.Food.Remove(redfood);
+                    redfood.deactivatefood();
+                }
                 HaveFood += 1;
-                foodStage.currentfood.transform.SetParent(gameObject.transform);
-                foodBlocks.Add(foodStage.currentfood);
-                RedFood a = foodStage.currentfood;
-                foodStage.Food.Remove(foodStage.currentfood);
-                a.deactivatefood();
+                UseCommunication();
+                UseCooperation();
+                food.transform.SetParent(gameObject.transform);
+                foodBlocks.Add(food);
+                
                 botikh.botikuseability();
             }
+            
+            
             else if (context.nowstate is EvolutionStage && cardstage == 3 && Hand.curentcard != null && Hand.curentcard.cardstage != 3 && (!Botikcard || Hand.curentcard.config.mainability is Parasite))
             {
                 Card c = Hand.curentcard;
@@ -227,6 +401,11 @@ public class Card : MonoBehaviour
                         return;
                     }
                     if (abilky.FirstOrDefault(card => card.config.mainability is Scavenger && card.cardstage == 1) && c.config.dopability is Carnivorous)
+                    {
+                        return;
+                    }
+                    if (Hand.curentcard.config.dopability is Carnivorous 
+                        && abilky.FirstOrDefault(card => card.config.dopability is Carnivorous && card.cardstage == 2) != null)
                     {
                         return;
                     }
@@ -245,13 +424,19 @@ public class Card : MonoBehaviour
                     c.colider.enabled = false;
                     c.config.dopability.OnAbilkaPlay(this);
                 }
+                
+                
                 else
                 {
                     if (abilky.FirstOrDefault(card => card.config.dopability is Carnivorous && card.cardstage == 2) && c.config.mainability is Scavenger)
                     {
                         return;
                     }
-                    
+
+                    if (abilky.FirstOrDefault(card => card.config.mainability.GetType() == Hand.curentcard.config.mainability.GetType() && card.cardstage == 1) != null)
+                    {
+                        return;
+                    }
                     Hand.curentcard.clearSubs();
                     Hand.curentcard.Needfood = 0;
                     Hand.TurnButton.onClick.RemoveListener(Hand.curentcard.Turn);
@@ -269,6 +454,8 @@ public class Card : MonoBehaviour
                 }
                 botikh.botikdosmth();
             }
+            
+            
             else if (context.nowstate is FightingStage && cardstage == 3)
             {
                 if (!activefightstage)
@@ -285,6 +472,8 @@ public class Card : MonoBehaviour
                 return;
             }
         }
+        
+        
         else
         {
             if (OnCard)
@@ -302,6 +491,8 @@ public class Card : MonoBehaviour
         }
 
     }
+    
+    
     public IEnumerator ChangeScale(Vector3 scale2, float timex)
     {
         Vector3 scale = gameObject.transform.localScale;
@@ -312,20 +503,25 @@ public class Card : MonoBehaviour
             while (time < timex)
             {
                 gameObject.transform.localScale = Vector3.Lerp(scale, scale2, time / timex);
-                //gameObject.transform.localPosition = Vector3.Lerp(pos, 2 * pos, time / 1);
                 time += Time.deltaTime;
                 yield return null;
             }
         }
     }
+    
+    
     public void clearSubs()
     {
         onCardClick = null;
     }
+    
+    
     private void OnDestroy()
     {
         clearSubs();
     }
+   
+    
     void Start()
     {
         Scale0 = gameObject.transform.localScale;

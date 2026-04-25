@@ -5,7 +5,6 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class hand : MonoBehaviour
 {
@@ -34,7 +33,7 @@ public class hand : MonoBehaviour
     public TableBox YourTable;
     [SerializeField]
     public TableBox botiktable;
-    int handstage = 1;
+    public int handstage = 1;
     
     public Card curentcard => cards.FirstOrDefault(c => c.active == true);
     public void LayoutInstant()
@@ -53,7 +52,7 @@ public class hand : MonoBehaviour
             cards[i].transform.localPosition = targetPos;
             if(handstage == 2)
             {
-                cards[i].transform.localRotation = Quaternion.Euler(180, 0, -targetRot);
+                cards[i].transform.localRotation = Quaternion.Euler(180, 180, targetRot);
             }
             else
             {

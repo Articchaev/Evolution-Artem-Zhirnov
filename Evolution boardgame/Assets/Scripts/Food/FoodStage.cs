@@ -1,12 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.XR;
-using static UnityEditor.PlayerSettings;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class FoodStage : MonoBehaviour, IGameState
 {
@@ -33,6 +28,10 @@ public class FoodStage : MonoBehaviour, IGameState
     Vector3 pos;
     [SerializeField]
     TableBox YourTable;
+    [SerializeField]
+    Botik botik;
+    [SerializeField]
+    bool botikphase;
     public RedFood currentfood => Food.FirstOrDefault(c => c.active == true);
     public void ChooseFood(RedFood card)
     {
@@ -48,6 +47,7 @@ public class FoodStage : MonoBehaviour, IGameState
     {
         List<Vector3> vector3s = new List<Vector3>() { new Vector3(-0.5f, -0.25f, 0), new Vector3(-0.5f, 0.25f, 0), new Vector3(0.5f, 0.25f, 0), new Vector3(0.5f, -0.25f, 0), new Vector3(-1, -0.25f, 0), new Vector3(-1, 0.25f, 0), new Vector3(1, -0.25f, 0), new Vector3(1, 0.25f, 0) };
         a = Random.Range(3, 8);
+        Hand.handstage = 1;
         foreach (Card card in Hand.cards)
         {
             if (card.cardstage == 2)
@@ -75,6 +75,15 @@ public class FoodStage : MonoBehaviour, IGameState
         Debug.Log("Перешел в игровую фазу");
         imagefight.sprite = fightactive;
         imagefood.sprite = foodinactive;
+        if (botikphase)
+        {
+            botik.botikuseability();
+            botikphase = false;
+        }
+        else
+        {
+            botikphase = true;
+        }
     }
     
 

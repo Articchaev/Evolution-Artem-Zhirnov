@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class EvolutionStage : MonoBehaviour, IGameState
 {
@@ -21,8 +19,16 @@ public class EvolutionStage : MonoBehaviour, IGameState
     Sprite evolutioninactive;
     [SerializeField]
     Table table;
+    [SerializeField]
+    Botikhand botikhand;
+    [SerializeField]
+    Botik botik;
     public void ChangeState()
     {
+        while (botikhand.cards.Count() > 0)
+        {
+            botik.botikdosmth();
+        }
         gameStateContext.SetStage(foodStage);
         Debug.Log("Перешел в фазу определения кормовой базы");
         imageevolution.sprite = evolutioninactive;

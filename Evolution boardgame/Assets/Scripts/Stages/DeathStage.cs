@@ -39,8 +39,13 @@ public class DeathStage : MonoBehaviour, IGameState
     GrazingExecutor executorGrazing;
     [SerializeField]
     PiracyExecutor piracyexecutor;
+    [SerializeField]
+    Botik botik;
+    [SerializeField]
+    bool botikphase = false;
     public void ChangeState()
     {
+        botik.botikusegrazing = false;
         if (TableDeck.currentcards == 0)
         {
             DieCreatures();
@@ -112,6 +117,15 @@ public class DeathStage : MonoBehaviour, IGameState
         imageevolution.sprite = evolutionactive;
         imagedeath.sprite = deathinactive;
         table.colider.enabled = true;
+        if (botikphase)
+        {
+            botik.botikdosmth();
+            botikphase = false;
+        }
+        else
+        {
+            botikphase = true;
+        }
     }
     public void DieCreatures()
     {
@@ -133,25 +147,45 @@ public class DeathStage : MonoBehaviour, IGameState
             {
                 i.hibernationabilka = true;
             }
-            i.HaveFood = 0;
+            i.HaveFood = i.HaveFood - i.Needfood;
             foreach (FoodBlock j in i.foodBlocks)
             {
                 GameObject.Destroy(j.gameObject);
             }
             i.foodBlocks.Clear();
+            for (int j = 0; j < i.HaveFood; j++)
+            {
+                i.foodBlocks.Add(GameObject.Instantiate(i.yellowfood, i.transform));
+            }
+            
         }
         foreach (Card i in BotikTable.Creatures)
         {
             if (i.HaveFood < i.Needfood)
             {
-                CardDel.Add(i);
+                if (i.abilky.FirstOrDefault(card => card.config.mainability is Hibernation && card.cardstage == 1) != null)
+                {
+                    CardHiber.Add(i);
+                }
+                else
+                {
+                    CardDel.Add(i);
+                }
             }
-            i.HaveFood = 0;
+            if (i.abilky.FirstOrDefault(card => card.config.mainability is Hibernation && card.cardstage == 1) != null && CardHiber.Contains(i) == false)
+            {
+                i.hibernationabilka = true;
+            }
+            i.HaveFood = i.HaveFood - i.Needfood;
             foreach (FoodBlock j in i.foodBlocks)
             {
                 GameObject.Destroy(j.gameObject);
             }
             i.foodBlocks.Clear();
+            for (int j = 0; j < i.HaveFood; j++)
+            {
+                i.foodBlocks.Add(GameObject.Instantiate(i.yellowfood, i.transform));
+            }
         }
         foreach (Card i in executor.PoisonedCreatures)
         {

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,8 +21,20 @@ public class FightingStage : MonoBehaviour, IGameState
     Sprite deathactive;
     [SerializeField]
     FoodStage foodStage;
+    [SerializeField]
+    Botik botik;
+    [SerializeField]
+    TableBox EnemyTable;
     public void ChangeState()
     {
+        for (int i = 0; i < EnemyTable.Creatures.Count(); i++)
+        {
+            botik.botikuseability();
+        }
+        for (int i = 0; i < foodStage.Food.Count; i++)
+        {
+            botik.PlayBotikFood();
+        }
         foreach(RedFood Redfood in foodStage.Food)
         {
             GameObject.Destroy(Redfood.gameObject);

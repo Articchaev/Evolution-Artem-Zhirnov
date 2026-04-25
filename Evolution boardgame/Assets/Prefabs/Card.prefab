@@ -1535,9 +1535,12 @@ MonoBehaviour:
   OnCard: 0
   otstyp: 0.7
   colider: {fileID: 6362162942068211328}
+  yellowfood: {fileID: 7800310824146854799, guid: 02cce491561f7f446a4c36ca33856ea1, type: 3}
+  bluefood: {fileID: 2082040245607628255, guid: c1a905f306e604f4481df40f436621f3, type: 3}
   YourTable: {fileID: 0}
   botiktable: {fileID: 0}
   activefightstage: 0
+  hibernationabilka: 0
 --- !u!210 &8927750266061538330
 SortingGroup:
   m_ObjectHideFlags: 0

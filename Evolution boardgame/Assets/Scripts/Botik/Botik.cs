@@ -22,58 +22,179 @@ public class Botik : MonoBehaviour
     TableBox YourTable;
     [SerializeField]
     TableBox EnemyTable;
+    [SerializeField]
+    PiracyExecutor executorpiracy;
+    public bool botikusegrazing = false;
     public void PlayBotikFood()
     {
         if (botiktable.Creatures.Count <=0 || foodstage.Food.Count <= 0 || botiktable.Creatures.Where(creature => creature.HaveFood < creature.Needfood).Count() <= 0)
         {
             return;
         }
-        RedFood food = foodstage.Food[0];
-        Card card = botiktable.Creatures.Where(creature => creature.HaveFood<creature.Needfood).ToList()[Random.Range(0, botiktable.Creatures.Count - 1)];
-        food.clearSubs();
-        food.onCard = true;
-        card.HaveFood += 1;
+        FoodBlock food = foodstage.Food[0];
+        Card card = botiktable.Creatures.Where(creature => (creature.HaveFood < creature.Needfood + creature.abilky.Count(card => card.config.dopability is FatTissue && card.cardstage == 2)) 
+            && !(EnemyTable.Creatures.IndexOf(creature) != 0
+            && creature.abilky.FirstOrDefault(card => card.config.mainability is Symbiosis && card.cardstage == 1) != null
+            && EnemyTable.Creatures[EnemyTable.Creatures.IndexOf(creature) - 1].HaveFood < EnemyTable.Creatures[EnemyTable.Creatures.IndexOf(creature) - 1].Needfood))
+            .ToList()[Random.Range(0, botiktable.Creatures.Count - 1)];
+        if (card.abilky.FirstOrDefault(card => card.config.dopability is FatTissue && card.cardstage == 2) != null
+            && card.HaveFood < card.Needfood + card.abilky.Count(card => card.config.dopability is FatTissue && card.cardstage == 2))
+        {
+            GameObject.Destroy(food.gameObject);
+            foodstage.Food.Remove(food as RedFood);
+            food = GameObject.Instantiate(card.yellowfood, gameObject.transform);
+        }
+        if (food is RedFood redfood)
+        {
+            redfood.clearSubs();
+            redfood.onCard = true;
+            foodstage.Food.Remove(redfood);
+            redfood.deactivatefood();
+        }
+
         food.transform.SetParent(card.transform);
         card.foodBlocks.Add(food);
-        RedFood a = food;
-        foodstage.Food.Remove(food);
-        a.deactivatefood();
+        card.HaveFood += 1;
+        card.UseCommunication();
+        card.UseCooperation();
     }
+
+
+
+
+
     public void botikuseability()
     {
+        botikusepiracy();
+        if (!botikusegrazing)
+        {
+            foreach (Card card in EnemyTable.Creatures)
+            {
+                if (card.abilky.FirstOrDefault(card2 => card2.cardstage == 1 && card.config.mainability is Grazing) != null && foodstage.Food.Count() > 0)
+                {
+                    RedFood f = foodstage.Food[0];
+                    GameObject.Destroy(f.gameObject);
+                    foodstage.Food.Remove(f);
+                }
+            }
+            botikusegrazing = true;
+        }
         foreach (Card i in botiktable.Creatures)
         {
             if (i.abilky.FirstOrDefault(card2 => card2.config.dopability is Carnivorous && card2.cardstage == 2) != null)
             {
-                if (executor.CarnivorousCreatures.Contains(i) || i.HaveFood >= i.Needfood)
+                if (executor.CarnivorousCreatures.Contains(i) || i.HaveFood >= i.Needfood + i.abilky.Count(card => card.config.dopability is FatTissue && card.cardstage == 2))
                 {
                     continue;
                 }
-                PlayBotikcarnivorous(i);
-                return;
+                if (PlayBotikcarnivorous(i))
+                {
+                    return;
+                }
             }
         }
         PlayBotikFood();
     }
-    public void PlayBotikcarnivorous(Card creature)
+
+
+
+
+
+    public void botikusepiracy()
+    {
+        foreach (Card card in botiktable.Creatures)
+        {
+            if (card.abilky.FirstOrDefault(card2 => card2.config.mainability is Piracy && card2.cardstage == 1) == null)
+            {
+                continue;
+            }
+            if (executorpiracy.PiracyCreatures.Contains(card) == true)
+            {
+                continue;
+            }
+            Card a = (Card)YourTable.Creatures.Where(creature => creature.Needfood > creature.HaveFood && creature.HaveFood > 0);
+            if (a == null)
+            {
+                continue;
+            }
+            FoodBlock f = a.foodBlocks[0];
+            a.foodBlocks.Remove(f);
+            f.transform.SetParent(card.transform);
+            card.foodBlocks.Add(f);
+            a.HaveFood -= 1;
+            card.HaveFood += 1;
+            executorpiracy.PiracyCreatures.Add(card);
+        }
+    }
+
+
+
+
+
+
+    public bool PlayBotikcarnivorous(Card creature)
     {
         Card targetcreature = null;
         if (cantarget(creature).Count() == 0)
         {
-            return;
+            return false;
         }
         targetcreature = cantarget(creature)[Random.Range(0, cantarget(creature).Count)];
-        executor.CarnivorousCreatures.Add(creature);
-        if (targetcreature.abilky.FirstOrDefault(card => card.config.mainability is Running && card.cardstage == 1) != null)
+        if (targetcreature.abilky.FirstOrDefault(card => card.config.mainability is Mimicry &&  card.cardstage == 1) != null)
         {
-            int k = Random.Range(0, 2);
-            if (k == 0)
+            foreach (Card i in cantarget(creature))
             {
-                return;
+                if (i.abilky.FirstOrDefault(card => card.config.mainability is Mimicry && card.cardstage == 1) == null)
+                {
+                    targetcreature = i;
+                    break;
+                }
             }
         }
-        creature.foodBlocks.Add(GameObject.Instantiate(bluefood, creature.transform));
-        creature.HaveFood += 1;
+        
+        executor.CarnivorousCreatures.Add(creature);
+        if (creature.HaveFood < creature.Needfood)
+        {
+            if (targetcreature.abilky.FirstOrDefault(card => card.config.mainability is Running && card.cardstage == 1) != null)
+            {
+                int k = Random.Range(0, 2);
+                if (k == 0)
+                {
+                    return true;
+                }
+            }
+            creature.foodBlocks.Add(GameObject.Instantiate(bluefood, creature.transform));
+            creature.HaveFood += 1;
+            creature.UseCooperation();
+        }
+        else if (creature.abilky.FirstOrDefault(card => card.config.dopability is FatTissue && card.cardstage == 2) != null
+            && creature.HaveFood < creature.Needfood + creature.abilky.Count(card => card.config.dopability is FatTissue && card.cardstage == 2))
+        {
+            if (targetcreature.abilky.FirstOrDefault(card => card.config.mainability is Running && card.cardstage == 1) != null)
+            {
+                int k = Random.Range(0, 2);
+                if (k == 0)
+                {
+                    return true;
+                }
+            }
+            creature.foodBlocks.Add(GameObject.Instantiate(creature.yellowfood, creature.transform));
+            creature.HaveFood += 1;
+            creature.UseCooperation();
+        }
+        if (targetcreature.abilky.FirstOrDefault(card => card.config.mainability is TailLoss && card.cardstage == 1) != null)
+        {
+            Card creature1 = targetcreature.abilky.FirstOrDefault(card => card.config.mainability is Parasite && card.cardstage == 1);
+            if (creature1 == null)
+            {
+                creature1 = targetcreature.abilky[0];
+            }
+            targetcreature.abilky.Remove(creature1);
+            GameObject.Destroy(creature1.gameObject);
+            targetcreature.AbilkaRovno();
+
+            return true;
+        }
         if (targetcreature.abilky.FirstOrDefault(card => card.config.mainability is Poisonous && card.cardstage == 1) != null)
         {
             executor.PoisonedCreatures.Add(creature);
@@ -82,6 +203,23 @@ public class Botik : MonoBehaviour
         {
             creature.foodBlocks.Add(GameObject.Instantiate(bluefood, creature.transform));
             creature.HaveFood += 1;
+            creature.UseCooperation();
+        }
+        else if (creature.abilky.FirstOrDefault(card => card.config.dopability is FatTissue && card.cardstage == 2) != null
+            && creature.HaveFood < creature.Needfood + creature.abilky.Count(card => card.config.dopability is FatTissue && card.cardstage == 2))
+        {
+            creature.foodBlocks.Add(GameObject.Instantiate(creature.yellowfood, creature.transform));
+            creature.HaveFood += 1;
+            creature.UseCooperation();
+        }
+        if (targetcreature != YourTable.Creatures.Last()
+            && YourTable.Creatures[YourTable.Creatures.IndexOf(targetcreature) + 1].abilky.FirstOrDefault(card => card.config.mainability is Symbiosis && card.cardstage == 1) != null)
+        {
+            Card c = YourTable.Creatures[YourTable.Creatures.IndexOf(targetcreature) + 1];
+            Card f = c.abilky.FirstOrDefault(card => card.config.mainability is Symbiosis && card.cardstage == 1);
+            c.abilky.Remove(f);
+            GameObject.Destroy(f.gameObject);
+            c.AbilkaRovno();
         }
         GameObject.Destroy(targetcreature.gameObject);
         YourTable.Creatures.Remove(targetcreature);
@@ -92,10 +230,33 @@ public class Botik : MonoBehaviour
         }
         if (ScavengerCreature != null)
         {
-            ScavengerCreature.foodBlocks.Add(GameObject.Instantiate(bluefood, ScavengerCreature.transform));
-            ScavengerCreature.HaveFood += 1;
+            if (ScavengerCreature.HaveFood < ScavengerCreature.Needfood)
+            {
+
+                ScavengerCreature.foodBlocks.Add(GameObject.Instantiate(bluefood, ScavengerCreature.transform));
+                ScavengerCreature.HaveFood += 1;
+                ScavengerCreature.UseCooperation();
+            }
+            else if (ScavengerCreature.abilky.FirstOrDefault(card => card.config.dopability is FatTissue && card.cardstage == 2) != null
+                && ScavengerCreature.HaveFood < ScavengerCreature.Needfood + ScavengerCreature.abilky.Count(card => card.config.dopability is FatTissue && card.cardstage == 2))
+            {
+                ScavengerCreature.foodBlocks.Add(GameObject.Instantiate(ScavengerCreature.yellowfood, ScavengerCreature.transform));
+                ScavengerCreature.HaveFood += 1;
+                ScavengerCreature.UseCooperation();
+            }
         }
+
+        return true;
     }
+
+
+
+
+
+
+
+
+
     public List<Card> cantarget(Card atackcreature)
     {
         List<Card> targets = new List<Card>();
@@ -123,17 +284,35 @@ public class Botik : MonoBehaviour
             {
                 continue;
             }
+            if (card.abilky.FirstOrDefault(card => card.config.mainability is Symbiosis && card.cardstage == 1) != null)
+            {
+                continue;
+            }
+            if (EnemyTable.Creatures.IndexOf(atackcreature) != 0
+                    && atackcreature.abilky.FirstOrDefault(card => card.config.mainability is Symbiosis && card.cardstage == 1) != null
+                    && EnemyTable.Creatures[EnemyTable.Creatures.IndexOf(atackcreature) - 1].HaveFood < EnemyTable.Creatures[EnemyTable.Creatures.IndexOf(atackcreature) - 1].Needfood)
+            {
+                continue;
+            }
             targets.Add(card);
         }
         return targets;
     }
+
+
+
+
+
+
+
+
     public void PlayBotikCard()
     {
         if (botikhand.cards.Count <= 0)
         {
             return;
         }
-        Card card = botikhand.cards[Random.Range(0, botikhand.cards.Count - 1)];
+        Card card = botikhand.cards[Random.Range(0, botikhand.cards.Count)];
         card.Needfood = 1;
         card.Ontable = true;
         card.transform.SetParent(botiktable.transform);
@@ -142,6 +321,11 @@ public class Botik : MonoBehaviour
         botikhand.cards.Remove(card);
         botikhand.LayoutInstant();
     }
+
+
+
+
+
     public void PlayBotikability()
     {
         bool playdopability = false;
@@ -151,7 +335,8 @@ public class Botik : MonoBehaviour
         {
             foreach (Card creature in botiktable.Creatures)
             {
-                if (card.config.dopability != null && card.config.dopability is Carnivorous && creature.abilky.FirstOrDefault(card2 => card2.config.dopability is Carnivorous && card2.cardstage == 2) == null)
+                if (card.config.dopability != null && card.config.dopability is Carnivorous 
+                    && creature.abilky.FirstOrDefault(card2 => card2.config.dopability is Carnivorous && card2.cardstage == 2) == null)
                 {
                     if (creature.abilky.FirstOrDefault(card => card.config.mainability is Scavenger && card.cardstage == 1))
                     {
@@ -164,9 +349,19 @@ public class Botik : MonoBehaviour
                 }
                 if (creature.abilky.FirstOrDefault(card2 => card2.config.mainability.GetType() == card.config.mainability.GetType() && card2.cardstage == 1) == null)
                 {
+                    if (creature.abilky.Count() >= 3 && botiktable.Creatures.FirstOrDefault(card => card.abilky.Count() < 3) != null) 
+                    {
+                        continue;
+                    }
                     if (creature.abilky.FirstOrDefault(card => card.config.dopability is Carnivorous && card.cardstage == 2) && card.config.mainability is Scavenger)
                     {
                         continue;
+                    }
+                    if (card.abilky.FirstOrDefault(card1 => card1.config.mainability is Parasite))
+                    {
+                        cardtoplay = card;
+                        creatureonplay = YourTable.Creatures[Random.Range(0, YourTable.Creatures.Count())];
+                        playdopability = false;
                     }
                     playdopability = false;
                     cardtoplay = card;
